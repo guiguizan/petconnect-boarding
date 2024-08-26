@@ -12,6 +12,6 @@ public class UserController {
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public String teste(){
-        return "Hello PET";
+        return "Hello PET TESTE";
     }
 }
