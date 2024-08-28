@@ -8,6 +8,5 @@ import org.mapstruct.factory.Mappers;
 
 @Mapper(componentModel = "spring")
 public abstract class UserMapper {
-
     public abstract User toUser(InsertUserRequesterDto userRequesterDto);
 }
