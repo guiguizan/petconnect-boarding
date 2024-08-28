@@ -25,7 +25,7 @@ public class UserInsertService {
         insertUserDto.setPassword(encryptedPassword);
 
 
-        final User user =userMapper.toUser(insertUserDto);
+        final User user = userMapper.toUser(insertUserDto);
         System.out.println(user);
         user.setCreatedAt(currentTime);
         user.setUpdatedAt(currentTime);
