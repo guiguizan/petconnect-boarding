@@ -14,7 +14,6 @@ import java.time.LocalDateTime;
 public class UserService {
 
     private final UserRepository userRepository;
-
     public User saveUser(User user){
         return userRepository.save(user);
     }

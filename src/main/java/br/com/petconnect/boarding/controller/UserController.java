@@ -3,6 +3,7 @@ package br.com.petconnect.boarding.controller;
 
 import br.com.petconnect.boarding.domain.User;
 import br.com.petconnect.boarding.dto.request.InsertUserRequesterDto;
+import br.com.petconnect.boarding.dto.response.UserResponseDto;
 import br.com.petconnect.boarding.service.user.UserInsertService;
 import br.com.petconnect.boarding.service.user.UserService;
 import jakarta.validation.Valid;
@@ -16,9 +17,9 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class UserController {
     private final UserInsertService userInsertService;
-    @PostMapping("/insert")
+    @PostMapping
     @ResponseStatus(HttpStatus.OK)
-    public User createUser(@Valid @RequestBody InsertUserRequesterDto user){
+    public UserResponseDto createUser(@Valid @RequestBody InsertUserRequesterDto user){
         return userInsertService.createUser(user);
     }
 }

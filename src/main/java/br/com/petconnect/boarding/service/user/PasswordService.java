@@ -11,13 +11,9 @@ public class PasswordService {
 
     private final BCryptPasswordEncoder passwordEncoder;
 
-
-
-
     public String encryptPassword(String rawPassword) {
         return passwordEncoder.encode(rawPassword);
     }
-
 
     public boolean verifyPassword(String rawPassword, String encryptedPassword) {
         return passwordEncoder.matches(rawPassword, encryptedPassword);
