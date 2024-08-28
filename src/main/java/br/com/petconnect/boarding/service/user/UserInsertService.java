@@ -26,7 +26,7 @@ public class UserInsertService {
 
 
         final User user =userMapper.toUser(insertUserDto);
-
+        System.out.println(user);
         user.setCreatedAt(currentTime);
         user.setUpdatedAt(currentTime);
         user.setIsActive(true);
