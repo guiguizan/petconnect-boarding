@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 public class UserInsertService {
     private final UserService userService;
     private final PasswordService passwordService;
-
+    private final UserMapper userMapper;
 
 
     public User createUser(InsertUserRequesterDto insertUserDto) {
@@ -23,7 +23,7 @@ public class UserInsertService {
 
         final String encryptedPassword = passwordService.encryptPassword(insertUserDto.getPassword());
         insertUserDto.setPassword(encryptedPassword);
-        final User user = UserMapper.INSTANCE.toUser(insertUserDto);
+        final User user = userMapper.toUser(insertUserDto);
 
         user.setCreatedAt(currentTime);
         user.setUpdatedAt(currentTime);
