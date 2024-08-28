@@ -23,11 +23,8 @@ public class UserInsertService {
 
         final String encryptedPassword = passwordService.encryptPassword(insertUserDto.getPassword());
         insertUserDto.setPassword(encryptedPassword);
-
-
         final User user = UserMapper.INSTANCE.toUser(insertUserDto);
 
-        System.out.println(user);
         user.setCreatedAt(currentTime);
         user.setUpdatedAt(currentTime);
         user.setIsActive(true);

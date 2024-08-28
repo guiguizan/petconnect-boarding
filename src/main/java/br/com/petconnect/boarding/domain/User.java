@@ -6,12 +6,12 @@ import lombok.*;
 
 import java.time.LocalDateTime;
 
-@Entity(name = "pet_user")
+
 @Data
-@Builder
-@NoArgsConstructor
 @AllArgsConstructor
-@ToString
+@NoArgsConstructor
+@Builder
+@Entity(name = "pet_user")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
