@@ -26,6 +26,7 @@ public class UserInsertService {
 
 
         final User user = UserMapper.INSTANCE.toUser(insertUserDto);
+
         System.out.println(user);
         user.setCreatedAt(currentTime);
         user.setUpdatedAt(currentTime);
