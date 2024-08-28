@@ -10,7 +10,7 @@ import org.hibernate.validator.constraints.br.CPF;
 @Builder
 public class InsertUserRequesterDto {
     @NotBlank(message = "O nome do usuário é obrigatório.")
-    private String userName;
+    private String nmUser;
 
     @Email(message = "O e-mail deve ser válido.")
     @NotBlank(message = "O e-mail é obrigatório.")
@@ -23,7 +23,7 @@ public class InsertUserRequesterDto {
     @NotBlank(message = "O CPF é obrigatório.")
     private String userCpf;
 
-
+// TODO ADICIONAR PARTES DO CONTATO
 //    private List<InsertUserContactsDto> contactsDtos;
 
 }
