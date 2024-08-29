@@ -20,5 +20,6 @@ public class UserService {
 
     public Boolean existsByCpf(String cpf){return userRepository.existsByUserCpf(cpf);}
 
+
     public Boolean existsByEmail(String email){return userRepository.existsByUserEmail(email);}
 }
