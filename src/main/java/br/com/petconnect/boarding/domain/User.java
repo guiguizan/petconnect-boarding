@@ -22,10 +22,10 @@ public class User {
     private String nmUser;
 
     @Column(name = "email_user")
-    private String userEmail;
+    private String email;
 
     @Column(name = "user_cpf")
-    private String userCpf;
+    private String cpf;
 
     @Column(name = "user_password")
     private String password;

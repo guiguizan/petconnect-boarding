@@ -41,11 +41,11 @@ public class UserInsertService {
     }
 
     private void validateUniqueConstraints(InsertUserRequesterDto insertUserDto) {
-        if (userService.existsByCpf(insertUserDto.getUserCpf())) {
+        if (userService.existsByCpf(insertUserDto.getCpf())) {
             throw new BusinessException("CPF já está em uso");
         }
 
-        if (userService.existsByEmail(insertUserDto.getUserEmail())) {
+        if (userService.existsByEmail(insertUserDto.getEmail())) {
             throw new BusinessException("Email já está em uso");
         }
     }
