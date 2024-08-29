@@ -22,4 +22,6 @@ public class UserController {
     public UserResponseDto createUser(@Valid @RequestBody InsertUserRequesterDto user){
         return userInsertService.createUser(user);
     }
+
+
 }

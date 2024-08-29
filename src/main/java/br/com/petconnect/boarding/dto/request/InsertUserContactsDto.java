@@ -7,4 +7,7 @@ import lombok.Data;
 @Data
 @Builder
 public class InsertUserContactsDto {
+    private String type;
+    private String contactValue;
+
 }

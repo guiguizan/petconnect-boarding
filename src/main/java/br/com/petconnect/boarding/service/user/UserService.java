@@ -17,4 +17,8 @@ public class UserService {
     public User saveUser(User user){
         return userRepository.save(user);
     }
+
+    public Boolean existsByCpf(String cpf){return userRepository.existsByUserCpf(cpf);}
+
+    public Boolean existsByEmail(String email){return userRepository.existsByUserEmail(email);}
 }

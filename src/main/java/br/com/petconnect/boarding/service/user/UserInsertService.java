@@ -2,14 +2,20 @@ package br.com.petconnect.boarding.service.user;
 
 
 import br.com.petconnect.boarding.config.jwt.JwtUtil;
+import br.com.petconnect.boarding.domain.ContactUser;
 import br.com.petconnect.boarding.domain.User;
+import br.com.petconnect.boarding.dto.request.InsertUserContactsDto;
 import br.com.petconnect.boarding.dto.request.InsertUserRequesterDto;
 import br.com.petconnect.boarding.dto.response.UserResponseDto;
+import br.com.petconnect.boarding.enums.ContactType;
+import br.com.petconnect.boarding.exception.BusinessException;
 import br.com.petconnect.boarding.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -20,21 +26,63 @@ public class UserInsertService {
     private final JwtUtil jwtUtil;
 
     public UserResponseDto createUser(InsertUserRequesterDto insertUserDto) {
-        final LocalDateTime currentTime = LocalDateTime.now();
+        LocalDateTime currentTime = LocalDateTime.now();
 
+        validateUniqueConstraints(insertUserDto);
+        validateContactTypes(insertUserDto.getContacts());
 
-        final String encryptedPassword = passwordService.encryptPassword(insertUserDto.getPassword());
+        String encryptedPassword = passwordService.encryptPassword(insertUserDto.getPassword());
         insertUserDto.setPassword(encryptedPassword);
-        final User currentUser = userMapper.toUser(insertUserDto);
 
-        currentUser.setCreatedAt(currentTime);
-        currentUser.setUpdatedAt(currentTime);
-        currentUser.setIsActive(true);
-        User userSaved = userService.saveUser(currentUser);
-        String token = jwtUtil.generateToken(userSaved.getNmUser(),userSaved.getIdUser().toString());
-        UserResponseDto userResponseDto = new UserResponseDto();
-        userResponseDto.setToken(token);
+        User user = mapUserWithContacts(insertUserDto, currentTime);
+        User savedUser = userService.saveUser(user);
 
-        return userResponseDto;
+        return generateUserResponse(savedUser);
+    }
+
+    private void validateUniqueConstraints(InsertUserRequesterDto insertUserDto) {
+        if (userService.existsByCpf(insertUserDto.getUserCpf())) {
+            throw new BusinessException("CPF já está em uso");
+        }
+
+        if (userService.existsByEmail(insertUserDto.getUserEmail())) {
+            throw new BusinessException("Email já está em uso");
+        }
+    }
+
+    private User mapUserWithContacts(InsertUserRequesterDto insertUserDto, LocalDateTime currentTime) {
+        User user = userMapper.toUser(insertUserDto);
+
+        List<ContactUser> contacts = insertUserDto.getContacts().stream()
+                .map(contactDto -> mapContactUser(contactDto, user, currentTime))
+                .collect(Collectors.toList());
+
+        user.setContacts(contacts);
+        user.setCreatedAt(currentTime);
+        user.setUpdatedAt(currentTime);
+        user.setIsActive(true);
+
+        return user;
+    }
+
+    private ContactUser mapContactUser(InsertUserContactsDto contactDto, User user, LocalDateTime currentTime) {
+        ContactUser contactUser = userMapper.toContactUser(contactDto);
+        contactUser.setUser(user);
+        contactUser.setCreatedAt(currentTime);
+        contactUser.setUpdatedAt(currentTime);
+        return contactUser;
+    }
+
+    private UserResponseDto generateUserResponse(User user) {
+        String token = jwtUtil.generateToken(user.getNmUser(), user.getIdUser().toString());
+        return new UserResponseDto(token);
+    }
+
+    private void validateContactTypes(List<InsertUserContactsDto> contacts) {
+        contacts.forEach(contact -> {
+            if (!ContactType.isValidCode(contact.getType())) {
+                throw new BusinessException("Tipo de contato inválido: "+contact.getType()+"");
+            }
+        });
     }
 }

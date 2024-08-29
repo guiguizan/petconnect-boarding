@@ -1,5 +1,7 @@
 package br.com.petconnect.boarding.handler;
 
+import br.com.petconnect.boarding.exception.BusinessException;
+import br.com.petconnect.boarding.exception.ExceptionDetails;
 import br.com.petconnect.boarding.exception.ValidationExceptionDetails;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -8,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
@@ -35,5 +38,21 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                         .fieldsMessage(fieldsMessage)
                         .build(), HttpStatus.BAD_REQUEST
         );
+    }
+
+
+    @ExceptionHandler(BusinessException.class)
+    public ResponseEntity<Object> err (BusinessException businessException){
+        return new ResponseEntity<>(
+                ExceptionDetails.builder()
+                        .details(businessException.getMessage())
+                        .title("Bad Request Exception, Invalid Field")
+                        .developMessage("Erro Interno")
+                        .timestamp(LocalDateTime.now())
+                        .developMessage("Check Data")
+                        .status(HttpStatus.BAD_REQUEST.value())
+                        .build(), HttpStatus.BAD_REQUEST
+        );
+
     }
 }
