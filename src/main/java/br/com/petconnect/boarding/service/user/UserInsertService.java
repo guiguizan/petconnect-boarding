@@ -3,11 +3,13 @@ package br.com.petconnect.boarding.service.user;
 
 import br.com.petconnect.boarding.config.jwt.JwtUtil;
 import br.com.petconnect.boarding.domain.ContactUser;
+import br.com.petconnect.boarding.domain.Role;
 import br.com.petconnect.boarding.domain.User;
 import br.com.petconnect.boarding.dto.request.InsertUserContactsDto;
 import br.com.petconnect.boarding.dto.request.InsertUserRequesterDto;
-import br.com.petconnect.boarding.dto.response.UserResponseDto;
-import br.com.petconnect.boarding.enums.ContactType;
+import br.com.petconnect.boarding.dto.response.RoleResponseDto;
+import br.com.petconnect.boarding.dto.response.UserCreatedResponseDto;
+import br.com.petconnect.boarding.enums.ContactTypeEnum;
 import br.com.petconnect.boarding.exception.BusinessException;
 import br.com.petconnect.boarding.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +27,7 @@ public class UserInsertService {
     private final UserMapper userMapper;
     private final JwtUtil jwtUtil;
 
-    public UserResponseDto createUser(InsertUserRequesterDto insertUserDto) {
+    public UserCreatedResponseDto createUser(InsertUserRequesterDto insertUserDto) {
         LocalDateTime currentTime = LocalDateTime.now();
 
         validateUniqueConstraints(insertUserDto);
@@ -73,14 +75,22 @@ public class UserInsertService {
         return contactUser;
     }
 
-    private UserResponseDto generateUserResponse(User user) {
+    private UserCreatedResponseDto generateUserResponse(User user) {
         String token = jwtUtil.generateToken(user.getNmUser(), user.getIdUser().toString());
-        return new UserResponseDto(token);
+        return new UserCreatedResponseDto(token);
     }
+
+//    private  List<RoleResponseDto> mapRoleUser(User user) {
+//        List<RoleResponseDto> roles = user.getRoles().stream()
+//                .map(role -> userMapper.toRoleUser(role))
+//                .collect(Collectors.toList());
+//
+//        return roles;
+//    }
 
     private void validateContactTypes(List<InsertUserContactsDto> contacts) {
         contacts.forEach(contact -> {
-            if (!ContactType.isValidCode(contact.getType())) {
+            if (!ContactTypeEnum.isValidCode(contact.getType())) {
                 throw new BusinessException("Tipo de contato inválido: "+contact.getType()+"");
             }
         });

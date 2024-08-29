@@ -1,6 +1,7 @@
 package br.com.petconnect.boarding.service.user;
 
 import br.com.petconnect.boarding.domain.User;
+import br.com.petconnect.boarding.exception.BusinessException;
 import br.com.petconnect.boarding.repositories.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,4 +19,12 @@ public class UserService {
 
 
     public Boolean existsByEmail(String email){return userRepository.existsByEmail(email);}
+
+
+    public User findByEmail(String email){
+        return userRepository.findByEmail(email)
+                .orElseThrow(
+                        () -> new BusinessException("Usuário não encontrado.")
+                );
+    }
 }

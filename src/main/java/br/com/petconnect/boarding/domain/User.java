@@ -44,4 +44,14 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ContactUser> contacts;
 
+
+    @ManyToMany
+    @JoinTable(
+            name = "user_roles", // Nome da tabela intermediária
+            joinColumns = @JoinColumn(name = "user_id"), // Nome da coluna que referencia o User
+            inverseJoinColumns = @JoinColumn(name = "role_id") // Nome da coluna que referencia o Role
+    )
+    private List<Role> roles;
+
+
 }

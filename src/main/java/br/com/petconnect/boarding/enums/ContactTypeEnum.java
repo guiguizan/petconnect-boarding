@@ -1,22 +1,23 @@
 package br.com.petconnect.boarding.enums;
 
-public enum ContactType {
-    TELEFONE("T"),
-    CELULAR("C");
+public enum ContactTypeEnum {
+    TELEFONE("T","Telefone"),
+    CELULAR("C","Celular");
 
 
     private String codeType;
-
+    private String description;
     public String getCodeType() {
         return codeType;
     }
 
-    ContactType(String codeType){
+    ContactTypeEnum(String codeType, String description){
         this.codeType = codeType;
+        this.description = description;
     }
 
     public static boolean isValidCode(String code) {
-        for (ContactType type : ContactType.values()) {
+        for (ContactTypeEnum type : ContactTypeEnum.values()) {
             if (type.getCodeType().equals(code)) {
                 return true;
             }
