@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Entity(name = "pet_role")
+@Entity(name = "pet_roles")
 public class Role {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -29,8 +29,5 @@ public class Role {
 
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
-
-
-
 
 }

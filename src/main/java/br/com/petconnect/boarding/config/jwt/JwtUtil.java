@@ -32,7 +32,7 @@ public class JwtUtil {
         return claimsResolver.apply(claims);
     }
 
-    private Claims extractAllClaims(String token) {
+    public Claims extractAllClaims(String token) {
         return Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token).getBody();
     }
 
@@ -44,12 +44,6 @@ public class JwtUtil {
         Map<String, Object> claims = new HashMap<>();
         claims.put("userId", userId);
         claims.put("roles", roles);
-        return createToken(claims, username);
-    }
-
-    public String generateToken(String username, String userId) {
-        Map<String, Object> claims = new HashMap<>();
-        claims.put("userId", userId);
         return createToken(claims, username);
     }
 

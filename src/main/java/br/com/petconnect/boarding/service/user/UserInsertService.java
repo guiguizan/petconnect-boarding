@@ -12,10 +12,12 @@ import br.com.petconnect.boarding.dto.response.UserCreatedResponseDto;
 import br.com.petconnect.boarding.enums.ContactTypeEnum;
 import br.com.petconnect.boarding.exception.BusinessException;
 import br.com.petconnect.boarding.mapper.UserMapper;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -26,7 +28,9 @@ public class UserInsertService {
     private final PasswordService passwordService;
     private final UserMapper userMapper;
     private final JwtUtil jwtUtil;
+    private final RoleService roleService;
 
+    @Transactional
     public UserCreatedResponseDto createUser(InsertUserRequesterDto insertUserDto) {
         LocalDateTime currentTime = LocalDateTime.now();
 
@@ -38,7 +42,6 @@ public class UserInsertService {
 
         User user = mapUserWithContacts(insertUserDto, currentTime);
         User savedUser = userService.saveUser(user);
-
         return generateUserResponse(savedUser);
     }
 
@@ -54,6 +57,8 @@ public class UserInsertService {
 
     private User mapUserWithContacts(InsertUserRequesterDto insertUserDto, LocalDateTime currentTime) {
         User user = userMapper.toUser(insertUserDto);
+        Role defaultRole = roleService.findById(1L);
+        user.setRoles(Collections.singletonList(defaultRole));
 
         List<ContactUser> contacts = insertUserDto.getContacts().stream()
                 .map(contactDto -> mapContactUser(contactDto, user, currentTime))
@@ -76,17 +81,13 @@ public class UserInsertService {
     }
 
     private UserCreatedResponseDto generateUserResponse(User user) {
-        String token = jwtUtil.generateToken(user.getNmUser(), user.getIdUser().toString());
+        List<String> roleNames = user.getRoles().stream()
+                .map(role -> role.getName())
+                .collect(Collectors.toList());
+
+        String token = jwtUtil.generateToken(user.getNmUser(), user.getIdUser().toString(),roleNames);
         return new UserCreatedResponseDto(token);
     }
-
-//    private  List<RoleResponseDto> mapRoleUser(User user) {
-//        List<RoleResponseDto> roles = user.getRoles().stream()
-//                .map(role -> userMapper.toRoleUser(role))
-//                .collect(Collectors.toList());
-//
-//        return roles;
-//    }
 
     private void validateContactTypes(List<InsertUserContactsDto> contacts) {
         contacts.forEach(contact -> {

@@ -52,6 +52,8 @@ public class AuthenticatedUserService {
             List<String> roleNames = roles.stream()
                     .map(RoleResponseDto::getName)
                     .collect(Collectors.toList());
+
+
             return jwtUtil.generateToken(user.getNmUser(), user.getIdUser().toString(), roleNames);
         }
 

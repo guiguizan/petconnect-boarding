@@ -12,6 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@ToString
 @Entity(name = "pet_user")
 public class User {
     @Id
@@ -47,9 +48,9 @@ public class User {
 
     @ManyToMany
     @JoinTable(
-            name = "user_roles", // Nome da tabela intermediária
-            joinColumns = @JoinColumn(name = "user_id"), // Nome da coluna que referencia o User
-            inverseJoinColumns = @JoinColumn(name = "role_id") // Nome da coluna que referencia o Role
+            name = "user_roles",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "id_role")
     )
     private List<Role> roles;
 
