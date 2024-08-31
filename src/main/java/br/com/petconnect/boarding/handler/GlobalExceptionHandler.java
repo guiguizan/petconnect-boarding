@@ -2,6 +2,8 @@ package br.com.petconnect.boarding.handler;
 
 import br.com.petconnect.boarding.exception.BusinessException;
 import br.com.petconnect.boarding.exception.ExceptionDetails;
+
+import br.com.petconnect.boarding.exception.TokenException;
 import br.com.petconnect.boarding.exception.ValidationExceptionDetails;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -11,6 +13,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
@@ -18,11 +21,11 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@ControllerAdvice
+@RestControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
-        List<FieldError> fieldErrors  = ex.getBindingResult().getFieldErrors();
+        List<FieldError> fieldErrors = ex.getBindingResult().getFieldErrors();
 
         String fields = fieldErrors.stream().map(FieldError::getField).collect(Collectors.joining(", "));
         String fieldsMessage = fieldErrors.stream().map(FieldError::getDefaultMessage).collect(Collectors.joining(", "));
@@ -40,9 +43,23 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         );
     }
 
+    @ExceptionHandler(TokenException.class)
+    public ResponseEntity<Object> err(TokenException tokenException) {
+        return new ResponseEntity<>(
+                ExceptionDetails.builder()
+                        .details(tokenException.getMessage())
+                        .title("Bad Request Exception, Invalid Field")
+                        .developMessage("Erro Interno")
+                        .timestamp(LocalDateTime.now())
+                        .developMessage("Check Data")
+                        .status(HttpStatus.UNAUTHORIZED.value())
+                        .build(), HttpStatus.UNAUTHORIZED
+        );
+    }
+
 
     @ExceptionHandler(BusinessException.class)
-    public ResponseEntity<Object> err (BusinessException businessException){
+    public ResponseEntity<Object> err(BusinessException businessException) {
         return new ResponseEntity<>(
                 ExceptionDetails.builder()
                         .details(businessException.getMessage())
@@ -55,4 +72,6 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         );
 
     }
+
+
 }

@@ -52,4 +52,10 @@ public class PasswordResetService {
         // Remover o token após o uso
         tokenRepository.delete(resetToken);
     }
+
+    public void updatePassword(String email, String newPassword) {
+        System.out.println(email);
+        User user =  userService.findByEmail(email);
+        userService.updatePassword(user, newPassword);
+    }
 }

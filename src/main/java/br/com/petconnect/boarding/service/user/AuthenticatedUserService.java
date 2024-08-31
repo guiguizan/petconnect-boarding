@@ -54,7 +54,7 @@ public class AuthenticatedUserService {
                     .collect(Collectors.toList());
 
 
-            return jwtUtil.generateToken(user.getNmUser(), user.getIdUser().toString(), roleNames);
+            return jwtUtil.generateToken(user.getEmail(), user.getIdUser().toString(), roleNames);
         }
 
         private UserLoginResponseDto buildUserLoginResponse(User user, List<RoleResponseDto> roles, String token) {

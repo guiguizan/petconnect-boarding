@@ -1,9 +1,13 @@
 package br.com.petconnect.boarding.config.jwt;
 
+import br.com.petconnect.boarding.exception.BusinessException;
+import br.com.petconnect.boarding.exception.TokenException;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.SignatureException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -15,12 +19,24 @@ import java.util.function.Function;
 
 @Component
 public class JwtUtil {
-    private String SECRET_KEY; // Use uma chave secreta forte e segura
+    private final String SECRET_KEY;
+
     public JwtUtil(@Value("${JWT_SECRET_KEY}") String secretKey) {
         this.SECRET_KEY = secretKey;
     }
+
     public String extractUsername(String token) {
-        return extractClaim(token, Claims::getSubject);
+        try {
+            return extractClaim(token, Claims::getSubject);
+        } catch (ExpiredJwtException e) {
+            throw new TokenException("Token expirado", e);
+        } catch (MalformedJwtException e) {
+            throw new TokenException("Token malformado");
+        } catch (SignatureException e) {
+            throw new TokenException("Assinatura inválida", e);
+        } catch (Exception e) {
+            throw new TokenException("Erro ao extrair claims do token", e);
+        }
     }
 
     public Date extractExpiration(String token) {
@@ -48,7 +64,6 @@ public class JwtUtil {
     }
 
     private String createToken(Map<String, Object> claims, String subject) {
-
         return Jwts.builder().setClaims(claims).setSubject(subject).setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10)) // 10 horas de validade
                 .signWith(SignatureAlgorithm.HS256, SECRET_KEY).compact();
