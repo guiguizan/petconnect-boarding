@@ -3,6 +3,7 @@ package br.com.petconnect.boarding.controller;
 
 import br.com.petconnect.boarding.domain.CustomUserDetails;
 import br.com.petconnect.boarding.dto.request.UpdatePasswordRequestDto;
+import br.com.petconnect.boarding.dto.response.DefaultMessageDto;
 import br.com.petconnect.boarding.service.user.PasswordResetService;
 import br.com.petconnect.boarding.service.user.PasswordService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -24,23 +25,25 @@ public class PasswordController {
 
     @PutMapping("/update-password")
     @SecurityRequirement(name = "bearerAuth")
-    public ResponseEntity<String> updatePassword(@RequestBody UpdatePasswordRequestDto updatePasswordRequest, @AuthenticationPrincipal CustomUserDetails userDetails) {
+    @ResponseStatus(HttpStatus.OK)
+    public DefaultMessageDto updatePassword(@RequestBody UpdatePasswordRequestDto updatePasswordRequest, @AuthenticationPrincipal CustomUserDetails userDetails) {
         String email = userDetails.getUsername();
-        passwordResetService.updatePassword(email, updatePasswordRequest.getNewPassword());
 
-        return ResponseEntity.ok("Senha atualizada com sucesso.");
+
+        return  passwordResetService.updatePassword(email, updatePasswordRequest.getNewPassword());
     }
 
-    @PostMapping("/reset-password/with-autorizaton")
-    public ResponseEntity<String> resetPassword(@RequestParam String email) {
-        passwordResetService.initiatePasswordReset(email);
-        return ResponseEntity.ok("Um e-mail de redefinição de senha foi enviado.");
+    @PostMapping("/reset-password")
+    @ResponseStatus(HttpStatus.OK)
+    public DefaultMessageDto resetPassword(@RequestParam String email) {
+
+        return passwordResetService.initiatePasswordReset(email);
     }
 
     @PostMapping("/reset-password/confirm")
-    public ResponseEntity<String> confirmPasswordReset(@RequestParam String token,
+    @ResponseStatus(HttpStatus.OK)
+    public DefaultMessageDto confirmPasswordReset(@RequestParam String token,
                                                        @RequestParam String newPassword) {
-        passwordResetService.resetPassword(token, newPassword);
-        return ResponseEntity.ok("Senha redefinida com sucesso.");
+        return passwordResetService.resetPassword(token, newPassword);
     }
 }

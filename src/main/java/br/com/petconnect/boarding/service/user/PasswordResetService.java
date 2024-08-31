@@ -3,6 +3,7 @@ package br.com.petconnect.boarding.service.user;
 
 import br.com.petconnect.boarding.domain.PasswordResetToken;
 import br.com.petconnect.boarding.domain.User;
+import br.com.petconnect.boarding.dto.response.DefaultMessageDto;
 import br.com.petconnect.boarding.exception.BusinessException;
 import br.com.petconnect.boarding.repositories.user.TokenRepository;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +22,7 @@ public class PasswordResetService {
 
     @Value("${app.reset-password.token-expiration-minutes}")
     private int tokenExpirationMinutes;
-    public void initiatePasswordReset(String email) {
+    public DefaultMessageDto initiatePasswordReset(String email) {
         User user = userService.findByEmail(email);
 
         String token = UUID.randomUUID().toString();
@@ -36,9 +37,12 @@ public class PasswordResetService {
 
         String resetLink = "https://yourapp.com/reset-password?token=" + token;
         emailService.sendPasswordResetEmail(user.getEmail(), resetLink);
+        return DefaultMessageDto.builder()
+                .message("Token Enviado no meu Cadastrado")
+                .build();
     }
 
-    public void resetPassword(String token, String newPassword) {
+    public DefaultMessageDto resetPassword(String token, String newPassword) {
         PasswordResetToken resetToken = tokenRepository.findByToken(token)
                 .orElseThrow(() -> new BusinessException("Token inválido ou expirado"));
 
@@ -51,11 +55,19 @@ public class PasswordResetService {
 
         // Remover o token após o uso
         tokenRepository.delete(resetToken);
+
+        return DefaultMessageDto.builder()
+                .message("Senha atualizada com sucesso")
+                .build();
     }
 
-    public void updatePassword(String email, String newPassword) {
-        System.out.println(email);
+    public DefaultMessageDto updatePassword(String email, String newPassword) {
+
         User user =  userService.findByEmail(email);
         userService.updatePassword(user, newPassword);
+
+        return DefaultMessageDto.builder()
+                .message("Senha atualizada com sucesso")
+                .build();
     }
 }
