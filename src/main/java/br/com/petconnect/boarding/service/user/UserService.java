@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final PasswordService passwordService;
     public User saveUser(User user){
         return userRepository.save(user);
     }
@@ -23,8 +24,16 @@ public class UserService {
 
     public User findByEmail(String email){
         return userRepository.findByEmail(email)
-                .orElseThrow(
-                        () -> new BusinessException("Usuário não encontrado.")
-                );
+                .orElseThrow(() -> new BusinessException("Usuário não encontrado."));
+    }
+
+
+    public void updatePassword(User user,String password)
+    {
+        String passwordEncrypted = passwordService.encryptPassword(password);
+        user.setPassword(passwordEncrypted);
+
+        userRepository.save(user);
+
     }
 }
