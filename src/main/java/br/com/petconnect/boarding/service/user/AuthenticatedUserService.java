@@ -27,6 +27,7 @@ public class AuthenticatedUserService {
         @Transactional
         public UserLoginResponseDto login(AuthenticatedRequestDto authRequest) {
             User user = authenticateUser(authRequest);
+            System.out.println(authRequest.getEmail());
             List<RoleResponseDto> roles = getUserRoles(user);
             String token = generateToken(user, roles);
             return buildUserLoginResponse(user, roles, token);
@@ -34,6 +35,7 @@ public class AuthenticatedUserService {
 
         private User authenticateUser(AuthenticatedRequestDto authRequest) {
             User user = userService.findByEmail(authRequest.getEmail());
+
             if (!passwordService.verifyPassword(authRequest.getPassword(), user.getPassword())) {
                 throw new BusinessException("Senha inválida.");
             }

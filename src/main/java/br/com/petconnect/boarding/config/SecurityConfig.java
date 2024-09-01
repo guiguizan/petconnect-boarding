@@ -30,10 +30,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(csrf -> csrf.disable())
-                .exceptionHandling(exceptionHandling -> exceptionHandling
-                        .authenticationEntryPoint(authenticationEntryPoint)
-                        .accessDeniedHandler(accessDeniedHandler)
-                )
+
                 .authorizeHttpRequests(authz -> authz
                         .requestMatchers("/api/v1/password/update-password").authenticated()
                         .requestMatchers("/api/v1/password/**").permitAll()
@@ -41,11 +38,14 @@ public class SecurityConfig {
                         .requestMatchers("/swagger-resources/**", "/swagger-ui/**", "/v3/api-docs/**", "/webjars/**").permitAll()
                         .anyRequest().authenticated()
                 )
+
                 .sessionManagement(sess -> sess
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
-                .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class); // Adiciona o filtro JWT antes do filtro padrão de autenticação
-
+                .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class) // Adiciona o filtro JWT antes do filtro padrão de autenticação
+                .exceptionHandling(exceptionHandling -> exceptionHandling
+                                .authenticationEntryPoint(authenticationEntryPoint) // Aqui é onde o CustomAuthenticationEntryPointConfig é registrado
+        );
         return http.build();
     }
 }

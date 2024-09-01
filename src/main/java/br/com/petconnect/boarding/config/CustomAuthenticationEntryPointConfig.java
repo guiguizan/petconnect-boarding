@@ -13,6 +13,8 @@ import java.io.IOException;
 public class CustomAuthenticationEntryPointConfig  implements AuthenticationEntryPoint {
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
-        throw new TokenException("Autenticação necessária");
+        response.setContentType("application/json");
+        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        response.getOutputStream().println("{ \"error\": \"" + authException.getMessage() + "\" }");
     }
 }

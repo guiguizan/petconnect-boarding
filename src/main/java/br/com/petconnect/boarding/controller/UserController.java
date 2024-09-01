@@ -1,42 +1,38 @@
 package br.com.petconnect.boarding.controller;
 
 
-import br.com.petconnect.boarding.config.jwt.JwtRequestFilter;
-import br.com.petconnect.boarding.config.jwt.JwtUtil;
-import br.com.petconnect.boarding.dto.request.AuthenticatedRequestDto;
-import br.com.petconnect.boarding.dto.request.InsertUserRequesterDto;
-import br.com.petconnect.boarding.dto.response.UserCreatedResponseDto;
-import br.com.petconnect.boarding.dto.response.UserLoginResponseDto;
-import br.com.petconnect.boarding.service.user.AuthenticatedUserService;
-import br.com.petconnect.boarding.service.user.UserInsertService;
-import io.jsonwebtoken.Claims;
-import jakarta.validation.Valid;
+import br.com.petconnect.boarding.domain.CustomUserDetails;
+import br.com.petconnect.boarding.dto.request.UserUpdateRequestDto;
+import br.com.petconnect.boarding.dto.response.DefaultMessageDto;
+import br.com.petconnect.boarding.dto.response.UserResponseDto;
+import br.com.petconnect.boarding.service.user.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 
-
 @RestController
-@RequestMapping("api/v1/auth")
+@RequestMapping("api/v1/user")
 @RequiredArgsConstructor
 public class UserController {
-    private final UserInsertService userInsertService;
-    private final AuthenticatedUserService authenticatedUserService;
-    private final JwtUtil jwtUtil;
-    @PostMapping("/signup")
-    @ResponseStatus(HttpStatus.OK)
-    public UserCreatedResponseDto createUser(@Valid @RequestBody InsertUserRequesterDto user){
-        return userInsertService.createUser(user);
-    }
-
-
-    @PostMapping("/login")
-    public UserLoginResponseDto authenticatedUser(@RequestBody AuthenticatedRequestDto authenticatedRequestDto){
-        return authenticatedUserService.login(authenticatedRequestDto);
-    }
+    private final UserService userService;
 
     @GetMapping
-    public Claims teste(@RequestParam String token){
-        return jwtUtil.extractAllClaims(token);
+    public UserResponseDto getUserByToken(@AuthenticationPrincipal CustomUserDetails userDetails){
+        return userService.findByEmailAndReturnAllInfos(userDetails.getUsername());
     }
+
+
+    @PutMapping
+    public DefaultMessageDto updateUser(@RequestBody UserUpdateRequestDto userUpdateRequestDto,
+                                        @AuthenticationPrincipal CustomUserDetails userDetails){
+        return userService.updateUser(userUpdateRequestDto, userDetails.getUsername());
+    }
+
+    @DeleteMapping
+    public DefaultMessageDto deleteUser(@AuthenticationPrincipal CustomUserDetails userDetails){
+        return userService.deleteUser(userDetails.getUsername());
+    }
+
+
 }

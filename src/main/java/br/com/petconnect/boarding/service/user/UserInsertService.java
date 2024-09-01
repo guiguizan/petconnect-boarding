@@ -85,7 +85,7 @@ public class UserInsertService {
                 .map(role -> role.getName())
                 .collect(Collectors.toList());
 
-        String token = jwtUtil.generateToken(user.getNmUser(), user.getIdUser().toString(),roleNames);
+        String token = jwtUtil.generateToken(user.getEmail(), user.getIdUser().toString(),roleNames);
         return new UserCreatedResponseDto(token);
     }
 
