@@ -35,7 +35,7 @@ public class PasswordResetService {
 
         tokenRepository.save(resetToken);
 
-        String resetLink = "https://yourapp.com/reset-password?token=" + token;
+        String resetLink = "http://localhost:4200/reset-password?token=" + token;
         emailService.sendPasswordResetEmail(user.getEmail(), resetLink);
         return DefaultMessageDto.builder()
                 .message("Token Enviado no meu Cadastrado")
