@@ -31,6 +31,9 @@ public class InsertUserRequesterDto {
     @NotBlank(message = "O CPF é obrigatório.")
     private String cpf;
 
+    @NotBlank(message = " endereço é obrigatório.")
+    private String adress;
+
 
     @NotEmpty(message = "A lista de contatos não pode estar vazia.")  // Garante que a lista não seja nula ou vazia
     @Valid

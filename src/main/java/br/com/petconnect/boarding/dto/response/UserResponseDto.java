@@ -18,6 +18,7 @@ public class UserResponseDto {
     private Long idUser;
     private String nmUser;
     private String email;
+    private String adress;
     private String cpf;
     private Boolean isActive;
     private LocalDateTime createdAt;
