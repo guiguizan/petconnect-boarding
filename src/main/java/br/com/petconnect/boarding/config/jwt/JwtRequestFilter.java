@@ -1,5 +1,6 @@
 package br.com.petconnect.boarding.config.jwt;
 
+import br.com.petconnect.boarding.exception.TokenException;
 import br.com.petconnect.boarding.service.user.CustomUserDetailsService;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
@@ -63,8 +64,8 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                     SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
                 }
             }
-        } catch (Exception e) {
-
+        } catch (TokenException e) {
+            System.out.println("AQUIII");
             handlerExceptionResolver.resolveException(request, response, null, e);  // Delegando a exceção para o HandlerExceptionResolver
             return;
         }

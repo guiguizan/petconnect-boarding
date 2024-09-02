@@ -1,10 +1,7 @@
 package br.com.petconnect.boarding.handler;
 
-import br.com.petconnect.boarding.exception.BusinessException;
-import br.com.petconnect.boarding.exception.ExceptionDetails;
+import br.com.petconnect.boarding.exception.*;
 
-import br.com.petconnect.boarding.exception.TokenException;
-import br.com.petconnect.boarding.exception.ValidationExceptionDetails;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -72,6 +69,22 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                         .developMessage("Check Data")
                         .status(HttpStatus.BAD_REQUEST.value())
                         .build(), HttpStatus.BAD_REQUEST
+        );
+
+    }
+
+
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<Object> err(ResourceNotFoundException resourceNotFoundException) {
+        return new ResponseEntity<>(
+                ExceptionDetails.builder()
+                        .details(resourceNotFoundException.getMessage())
+                        .title("Bad Request Exception, Invalid Field")
+                        .developMessage("Erro Interno")
+                        .timestamp(LocalDateTime.now())
+                        .developMessage("Check Data")
+                        .status(HttpStatus.NOT_FOUND.value())
+                        .build(), HttpStatus.NOT_FOUND
         );
 
     }

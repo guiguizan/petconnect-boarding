@@ -46,6 +46,10 @@ public class User {
     private List<ContactUser> contacts;
 
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<PetAnimals> animals;
+
+
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
             name = "user_roles",
