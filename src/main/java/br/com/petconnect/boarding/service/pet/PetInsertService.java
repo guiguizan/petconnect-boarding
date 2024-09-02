@@ -22,10 +22,14 @@ public class PetInsertService {
     private final PetMapper petMapper;
     private final PetService petService;
     private final AuthUtils authUtils;
-    public PetResponseDto insertPetDto(InsertPetRequestDto insertPetRequestDto, String authorizationHeader){
-        User user = authUtils.getUserFromAuthorizationHeader(authorizationHeader);
+    public PetResponseDto insertPetDto(InsertPetRequestDto insertPetRequestDto){
         LocalDateTime localDateTime = LocalDateTime.now();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = authUtils.getUserFromAuthorizationHeader(authentication.getCredentials().toString());
+
+
         PetAnimals currentPet = petMapper.toPet(insertPetRequestDto);
+
         currentPet.setAge();
         currentPet.setUser(user);
 

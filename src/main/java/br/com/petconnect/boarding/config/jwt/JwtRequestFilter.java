@@ -56,7 +56,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
 
                     UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
-                            userDetails, null,authorities);
+                            userDetails, jwt,authorities);
 
 
                     usernamePasswordAuthenticationToken

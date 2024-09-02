@@ -34,6 +34,7 @@ public class PetAnimals {
 
     private String petType;
 
+    @Column(name = "birthdate")
     private LocalDate birthDate;
 
 

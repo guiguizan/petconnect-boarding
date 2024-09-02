@@ -29,8 +29,6 @@ public class AuthUtils {
     public String extractToken(String authorizationHeader) {
         try {
             return Optional.ofNullable(authorizationHeader)
-                    .filter(header -> header.startsWith("Bearer "))
-                    .map(header -> header.substring(7)) // Remove "Bearer " do token
                     .orElseThrow(() -> new TokenException("Token de autenticação ausente."));
         } catch (Exception e) {
             throw new TokenException("Falha ao extrair Token JWT.");

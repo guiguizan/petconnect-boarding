@@ -16,4 +16,6 @@ public interface PetMapper {
     PetAnimals toPet(InsertPetRequestDto insertPetRequestDto);
     @Mapping(target = "userId", expression = "java(petAnimals.getUser() != null ? petAnimals.getUser().getIdUser() : null)")
     PetResponseDto toPet(PetAnimals petAnimals);
+    @Mapping(target = "userId", expression = "java(petAnimals.getUser() != null ? petAnimals.getUser().getIdUser() : null)")
+    PetResponseDto toPetResponseDto(PetAnimals petAnimals);
 }
