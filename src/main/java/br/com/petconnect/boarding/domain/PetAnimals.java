@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -45,7 +46,8 @@ public class PetAnimals {
     @JoinColumn(name = "id_user", nullable = false)
     private User user;
 
-
+    @OneToMany(mappedBy = "pet", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Appointment> appointments;
 
     public void setAge() {
 

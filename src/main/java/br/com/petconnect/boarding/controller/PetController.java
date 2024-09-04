@@ -15,6 +15,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("api/v1/pet")
 @RequiredArgsConstructor
@@ -28,9 +30,9 @@ public class PetController {
     }
 
     @GetMapping("/my-pets")
-    public Page<PetResponseDto> getMyPets(Pageable pageable )
+    public List<PetResponseDto> getMyPets()
     {
-            return petService.getPetsByUserId(pageable);
+            return petService.getPetsByUserId();
     }
     @GetMapping("/{id}")
     public PetResponseDto getMyPets(@RequestParam Long idPet) {

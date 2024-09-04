@@ -16,6 +16,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 public class PetService {
@@ -42,28 +45,18 @@ public class PetService {
    }
 
 
-
-   public Page<PetAnimals> findAllpets(Pageable pageable){
-       return petRepository.findAll(pageable);
-   }
-
-   public PetAnimals editPet(Long id, InsertPetRequestDto insertPetRequestDto){
-       PetAnimals  pet = findPetById(id);
-// TODO
-       return pet;
-   }
-
-    public Page<PetResponseDto> toPetResponseDtoPage(Page<PetAnimals> petsPage) {
-        return petsPage.map(petMapper::toPetResponseDto);
+    public List<PetResponseDto> toPetResponseDtoList(List<PetAnimals> petsPage) {
+        return petsPage.stream()
+                .map(petMapper::toPetResponseDto)
+                .collect(Collectors.toList());
     }
 
-
-    public Page<PetResponseDto> getPetsByUserId( Pageable pageable) {
+    public List<PetResponseDto> getPetsByUserId() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = authUtils.getUserFromAuthorizationHeader(authentication.getCredentials().toString());
-        return toPetResponseDtoPage(petRepository.findByUser(user, pageable));
+        List<PetAnimals> petsPage = petRepository.findByUser(user);
+        return toPetResponseDtoList(petsPage);
     }
-
 
    public DefaultMessageDto deletePet(Long petId){
 
