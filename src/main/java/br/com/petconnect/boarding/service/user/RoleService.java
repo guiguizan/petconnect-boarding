@@ -3,6 +3,7 @@ package br.com.petconnect.boarding.service.user;
 
 import br.com.petconnect.boarding.domain.Role;
 import br.com.petconnect.boarding.exception.BusinessException;
+import br.com.petconnect.boarding.exception.ResourceNotFoundException;
 import br.com.petconnect.boarding.repositories.user.RoleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,7 +18,7 @@ public class RoleService {
     public Role findById(Long roleId){
         return roleRepository.findById(roleId).orElseThrow(
                 () ->
-                new BusinessException("Role não encontrada")
+                new ResourceNotFoundException("Role não encontrada")
         );
     }
 }

@@ -8,6 +8,7 @@ import br.com.petconnect.boarding.dto.response.DefaultMessageDto;
 import br.com.petconnect.boarding.dto.response.RoleResponseDto;
 import br.com.petconnect.boarding.dto.response.UserResponseDto;
 import br.com.petconnect.boarding.exception.BusinessException;
+import br.com.petconnect.boarding.exception.ResourceNotFoundException;
 import br.com.petconnect.boarding.mapper.UserMapper;
 import br.com.petconnect.boarding.repositories.user.UserRepository;
 import jakarta.transaction.Transactional;
@@ -38,7 +39,7 @@ public class UserService {
 
     public User findByEmail(String email){
         return userRepository.findByEmail(email)
-                .orElseThrow(() -> new BusinessException("Usuário não encontrado."));
+                .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado."));
     }
 
 
