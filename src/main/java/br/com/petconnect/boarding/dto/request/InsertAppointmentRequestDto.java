@@ -15,7 +15,6 @@ import java.time.LocalTime;
 public class InsertAppointmentRequestDto {
     private Long petId;
     private String serviceType;
-    private String petType;
     @JsonFormat(pattern = "yyyy-MM-dd", shape = JsonFormat.Shape.STRING)
     private LocalDate appointmentDate;
 

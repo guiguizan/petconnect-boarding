@@ -2,13 +2,17 @@ package br.com.petconnect.boarding.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
 @Data
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class InsertPetRequestDto {
     @NotBlank(message = "O nome do Pet e Obrigatorio")
     private String name;
@@ -18,7 +22,7 @@ public class InsertPetRequestDto {
 
     @NotBlank(message = "A Raça do Pet e Obrigatorio")
     private String breed;
-    //    Criar enum
+
     @NotBlank(message = "O Tipo do Pet e Obrigatorio")
     private String petType;
 

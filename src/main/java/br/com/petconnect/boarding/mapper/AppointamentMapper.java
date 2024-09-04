@@ -19,5 +19,6 @@ public interface AppointamentMapper {
     @Mapping(target = "petId", expression = "java(appointment.getPet() != null ? appointment.getPet().getIdPet() : null)")
     @Mapping(target = "appointmentStatus",source = "serviceType")
     @Mapping(target = "id",source = "idAppointment")
+    @Mapping(target = "petType", expression = "java(appointment.getPet() != null ? appointment.getPet().getPetType() : null)")
     AppointamentResponseDto toAppointamentRespoDto(Appointment appointment);
 }

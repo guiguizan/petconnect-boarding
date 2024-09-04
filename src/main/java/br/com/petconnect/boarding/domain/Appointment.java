@@ -20,7 +20,7 @@ public class Appointment {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long idAppointment;
     private String serviceType;
-    private String petType;
+
     private LocalDate appointmentDate;
     private LocalTime   appointmentTime;
 

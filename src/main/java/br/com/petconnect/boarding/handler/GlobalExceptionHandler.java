@@ -46,7 +46,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(TokenException.class)
     public ResponseEntity<Object> err(TokenException tokenException) {
         return new ResponseEntity<>(
-                ExceptionDetails.builder()
+                ValidationExceptionDetails.builder()
                         .details(tokenException.getMessage())
                         .title("Bad Request Exception, Invalid Field")
                         .developMessage("Erro Interno")
