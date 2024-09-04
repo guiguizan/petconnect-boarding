@@ -3,8 +3,10 @@ package br.com.petconnect.boarding.enums;
 import br.com.petconnect.boarding.exception.BusinessException;
 
 public enum AppointmentTypeEnum {
-    SCHEDULE("SCHEDULE"),
-    BATH("BATH");
+    BATH("BATH"),
+    GROOMING("GROOMING"),
+    BATH_AND_GROOMING("BATH_AND_GROOMING"),
+    VETERINARY_CONSULTATION("VETERINARY_CONSULTATION");
 
 
     public String getServiceType() {
