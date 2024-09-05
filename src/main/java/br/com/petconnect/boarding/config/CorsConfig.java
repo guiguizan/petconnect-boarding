@@ -11,11 +11,28 @@ public class CorsConfig {
     @Bean
     public CorsFilter corsFilter() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowCredentials(true); // Permitir credenciais (cookies, auth headers)
-        config.addAllowedOriginPattern("*"); // Permitir todas as origens
-        config.addAllowedHeader("*"); // Permitir todos os headers
-        config.addAllowedMethod("*"); // Permitir todos os métodos (GET, POST, etc.)
-        config.addAllowedOriginPattern("http://localhost:4200");
+
+        // Permitir que cookies e credenciais sejam enviados
+        config.setAllowCredentials(true);
+        config.addAllowedOriginPattern("https://app.kinvo.com.br");
+
+        // Permitir todas as origens (atenção: isso é menos seguro, use com cautela em produção)
+        config.addAllowedOriginPattern("*");
+
+        // Permitir todos os cabeçalhos
+        config.addAllowedHeader("*");
+
+        // Permitir métodos como GET, POST, PUT, DELETE, OPTIONS
+        config.addAllowedMethod("*");
+
+        // Cabeçalhos específicos que você deseja garantir que estejam presentes
+        config.addAllowedHeader("Authorization");
+        config.addAllowedHeader("Content-Type");
+
+        // Expor o cabeçalho de autorização
+        config.addExposedHeader("Authorization");
+
+        // Fonte de configuração do CORS
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config); // Aplicar a todas as rotas
 
