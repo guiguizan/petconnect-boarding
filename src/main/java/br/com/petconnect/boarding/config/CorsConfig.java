@@ -15,7 +15,7 @@ public class CorsConfig {
         config.addAllowedOriginPattern("*"); // Permitir todas as origens
         config.addAllowedHeader("*"); // Permitir todos os headers
         config.addAllowedMethod("*"); // Permitir todos os métodos (GET, POST, etc.)
-
+        config.addAllowedOriginPattern("http://localhost:4200");
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config); // Aplicar a todas as rotas
 
