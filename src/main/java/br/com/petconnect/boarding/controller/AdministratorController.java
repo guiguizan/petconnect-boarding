@@ -30,11 +30,11 @@ public class AdministratorController {
     }
 
 
-    @GetMapping("/list-user")
+    @GetMapping("/list-user/{roleName}")
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasRole('USER_ADMIN')")
-    public Page<UserResponseDto> listUser(@PageableDefault(sort = "idUser") Pageable pageable){
-        return userService.getUsers(pageable);
+    public Page<UserResponseDto> listUser(@RequestParam String roleName,@PageableDefault(sort = "idUser") Pageable pageable){
+        return userService.getUsers(roleName,pageable);
     }
 
 

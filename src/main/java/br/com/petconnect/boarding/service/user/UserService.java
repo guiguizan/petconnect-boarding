@@ -139,8 +139,8 @@ public class UserService {
                 .build();
     }
     @Transactional
-    public Page<UserResponseDto> getUsers(Pageable pageable) {
-        Page<User> userPage = userRepository.findAll(pageable);  // Corrigido para passar o pageable
+    public Page<UserResponseDto> getUsers(String roleName,Pageable pageable) {
+        Page<User> userPage = userRepository.findByRoleName(roleName,pageable);  // Corrigido para passar o pageable
         return userPage.map( userMapper::toUserResponse);  // Transformando User em UserResponseDto
     }
 }

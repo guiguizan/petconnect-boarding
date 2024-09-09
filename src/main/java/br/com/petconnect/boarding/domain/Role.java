@@ -16,6 +16,7 @@ import java.time.LocalDateTime;
 public class Role {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @Column(name = "id_role")
     private Long idRole;
 
     @Column(name = "role_name")
