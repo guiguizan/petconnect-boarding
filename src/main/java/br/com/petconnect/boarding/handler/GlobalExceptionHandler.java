@@ -91,10 +91,19 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(AccessDeniedException.class)
     @ResponseStatus(HttpStatus.FORBIDDEN)
-    public ResponseEntity<String> handleAccessDeniedException(AccessDeniedException ex) {
-        return ResponseEntity
-                .status(HttpStatus.FORBIDDEN)
-                .body("Acesso negado: " + ex.getMessage());
+    public ResponseEntity<Object> handleAccessDeniedException(AccessDeniedException ex) {
+
+        return new ResponseEntity<>(
+                ExceptionDetails.builder()
+                .details(ex.getMessage())
+                .title("Unauthorized, Invalid Credentials")
+                .developMessage("Erro de Autenticação")
+                .timestamp(LocalDateTime.now())
+                .developMessage("Check Data")
+                .status(HttpStatus.UNAUTHORIZED.value())
+                .build(), HttpStatus.UNAUTHORIZED
+        );
+
     }
     @ExceptionHandler(AuthenticationCredentialsNotFoundException.class)
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
