@@ -22,15 +22,20 @@ public class AppointmentController {
     }
 
     @GetMapping("/{id}")
-    public AppointamentResponseDto insertAppointament(@RequestParam Long idAppointament){
+    public AppointamentResponseDto getAppointamentById(@RequestParam Long idAppointament){
         return appointmentService.findByIdAndReturnDto(idAppointament);
     }
 
 
     @DeleteMapping("/{id}")
     public DefaultMessageDto deleteAppointament(@RequestParam Long idAppointament){
-
         return appointmentService.deleteAppointament(idAppointament);
+    }
+
+
+    @GetMapping("/pet/{petId}")
+    public AppointamentResponseDto getAppointmentByPetId(@RequestParam Long IdPet){
+        return appointmentService.findAppointmentByPetId(IdPet);
     }
 
 }

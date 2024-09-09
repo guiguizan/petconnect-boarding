@@ -69,7 +69,6 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                 }
             }
         } catch (TokenException e) {
-            System.out.println("AQUIII");
             handlerExceptionResolver.resolveException(request, response, null, e);  // Delegando a exceção para o HandlerExceptionResolver
             return;
         }
