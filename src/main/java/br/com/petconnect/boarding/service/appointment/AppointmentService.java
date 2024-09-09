@@ -2,13 +2,18 @@ package br.com.petconnect.boarding.service.appointment;
 
 import br.com.petconnect.boarding.domain.Appointment;
 import br.com.petconnect.boarding.domain.PetAnimals;
+import br.com.petconnect.boarding.domain.User;
 import br.com.petconnect.boarding.dto.response.AppointamentResponseDto;
 import br.com.petconnect.boarding.dto.response.DefaultMessageDto;
 import br.com.petconnect.boarding.exception.BusinessException;
 import br.com.petconnect.boarding.mapper.AppointamentMapper;
 import br.com.petconnect.boarding.repositories.user.AppointamentRepository;
 import br.com.petconnect.boarding.service.pet.PetService;
+import br.com.petconnect.boarding.service.user.UserService;
+import br.com.petconnect.boarding.util.AuthUtils;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,6 +25,8 @@ public class AppointmentService {
     private final AppointamentRepository appointamentRepository;
     private final AppointamentMapper appointamentMapper;
     private final PetService petService;
+    private final UserService userService;
+    private final AuthUtils authUtils;
 
     public Appointment saveAppointament(Appointment appointment){
        return appointamentRepository.save(appointment);
@@ -41,6 +48,21 @@ public class AppointmentService {
 
         return DefaultMessageDto.builder().message("Agendamento cancelado com sucesso!").build();
     }
+
+    public List<AppointamentResponseDto> findAppointmentByUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = authUtils.getUserFromAuthorizationHeader(authentication.getCredentials().toString());
+
+        List<Appointment> appointments = appointamentRepository.findByUser(user);
+        List<AppointamentResponseDto> appointamentResponseDtos = appointments.stream().map(
+                appointment -> appointamentMapper.toAppointamentRespoDto(appointment))
+                .collect(Collectors.toList());
+
+        return appointamentResponseDtos;
+    }
+
+
+
 
 
     public List<AppointamentResponseDto> findAppointmentByPetId(Long idPet) {

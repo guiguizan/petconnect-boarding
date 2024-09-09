@@ -13,7 +13,11 @@ import br.com.petconnect.boarding.mapper.UserMapper;
 import br.com.petconnect.boarding.repositories.user.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -133,5 +137,10 @@ public class UserService {
         return DefaultMessageDto.builder()
                 .message("Usuário excluído com sucesso")
                 .build();
+    }
+    @Transactional
+    public Page<UserResponseDto> getUsers(Pageable pageable) {
+        Page<User> userPage = userRepository.findAll(pageable);  // Corrigido para passar o pageable
+        return userPage.map( userMapper::toUserResponse);  // Transformando User em UserResponseDto
     }
 }

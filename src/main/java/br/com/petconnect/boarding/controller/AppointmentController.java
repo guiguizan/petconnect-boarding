@@ -40,4 +40,10 @@ public class AppointmentController {
         return appointmentService.findAppointmentByPetId(IdPet);
     }
 
+
+    @GetMapping("/user")
+    public List<AppointamentResponseDto> getAppointmentByUser(){
+        return appointmentService.findAppointmentByUser();
+    }
+
 }

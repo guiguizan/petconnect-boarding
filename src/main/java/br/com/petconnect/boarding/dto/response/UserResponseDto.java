@@ -24,6 +24,5 @@ public class UserResponseDto {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private List<RoleResponseDto> roles;
-
     private List<ContactReponseDto> contacts;
 }
