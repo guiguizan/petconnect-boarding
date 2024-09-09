@@ -1,6 +1,7 @@
 package br.com.petconnect.boarding.controller;
 
 import br.com.petconnect.boarding.dto.request.InsertAppointmentRequestDto;
+import br.com.petconnect.boarding.dto.request.UpdateAppointmentRequestDto;
 import br.com.petconnect.boarding.dto.response.AppointamentResponseDto;
 import br.com.petconnect.boarding.dto.response.DefaultMessageDto;
 import br.com.petconnect.boarding.service.appointment.AppointmentInsertService;
@@ -45,5 +46,11 @@ public class AppointmentController {
     public List<AppointamentResponseDto> getAppointmentByUser(){
         return appointmentService.findAppointmentByUser();
     }
+
+    @PutMapping
+    public DefaultMessageDto getAppointmentByUser(@RequestBody UpdateAppointmentRequestDto updateAppointmentRequestDto){
+        return appointmentService.updateAppointament(updateAppointmentRequestDto);
+    }
+
 
 }

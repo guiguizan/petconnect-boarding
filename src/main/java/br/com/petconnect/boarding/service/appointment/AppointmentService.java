@@ -3,6 +3,7 @@ package br.com.petconnect.boarding.service.appointment;
 import br.com.petconnect.boarding.domain.Appointment;
 import br.com.petconnect.boarding.domain.PetAnimals;
 import br.com.petconnect.boarding.domain.User;
+import br.com.petconnect.boarding.dto.request.UpdateAppointmentRequestDto;
 import br.com.petconnect.boarding.dto.response.AppointamentResponseDto;
 import br.com.petconnect.boarding.dto.response.DefaultMessageDto;
 import br.com.petconnect.boarding.exception.BusinessException;
@@ -23,7 +24,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class AppointmentService {
     private final AppointamentRepository appointamentRepository;
-    private final AppointamentMapper appointamentMapper;
+    private final AppointamentMapper appointmentMapper;
     private final PetService petService;
     private final UserService userService;
     private final AuthUtils authUtils;
@@ -37,7 +38,7 @@ public class AppointmentService {
     }
 
     public AppointamentResponseDto findByIdAndReturnDto(Long idAppointament) {
-        return appointamentMapper.toAppointamentRespoDto(findById(idAppointament));
+        return appointmentMapper.toAppointamentRespoDto(findById(idAppointament));
     }
 
 
@@ -55,7 +56,7 @@ public class AppointmentService {
 
         List<Appointment> appointments = appointamentRepository.findByUser(user);
         List<AppointamentResponseDto> appointamentResponseDtos = appointments.stream().map(
-                appointment -> appointamentMapper.toAppointamentRespoDto(appointment))
+                appointment -> appointmentMapper.toAppointamentRespoDto(appointment))
                 .collect(Collectors.toList());
 
         return appointamentResponseDtos;
@@ -68,7 +69,22 @@ public class AppointmentService {
     public List<AppointamentResponseDto> findAppointmentByPetId(Long idPet) {
         PetAnimals pet = petService.findPetById(idPet);
         List<Appointment> appointments = appointamentRepository.findByPet(pet);
-        List<AppointamentResponseDto> appointamentResponseDtos = appointments.stream().map(appointment -> appointamentMapper.toAppointamentRespoDto(appointment)).collect(Collectors.toList());
+        List<AppointamentResponseDto> appointamentResponseDtos = appointments.stream().map(appointment -> appointmentMapper.toAppointamentRespoDto(appointment)).collect(Collectors.toList());
         return appointamentResponseDtos;
+    }
+
+    public DefaultMessageDto updateAppointament(UpdateAppointmentRequestDto updateDto) {
+        Appointment appointment = findById(updateDto.getAppointmentId());
+        PetAnimals petAnimals = petService.findPetById(updateDto.getPetId());
+
+
+        appointment.setPet(petAnimals);
+        appointment.setServiceType(updateDto.getServiceType());
+        appointment.setAppointmentDate(updateDto.getAppointmentDate());
+        appointment.setAppointmentTime(updateDto.getAppointmentTime());
+
+        appointamentRepository.save(appointment);
+
+        return new DefaultMessageDto("Agendamento atualizado com sucesso");
     }
 }
