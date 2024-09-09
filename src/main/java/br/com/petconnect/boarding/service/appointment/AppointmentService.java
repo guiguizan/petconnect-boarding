@@ -11,6 +11,9 @@ import br.com.petconnect.boarding.service.pet.PetService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 public class AppointmentService {
@@ -40,12 +43,10 @@ public class AppointmentService {
     }
 
 
-    public AppointamentResponseDto findAppointmentByPetId(Long idPet) {
+    public List<AppointamentResponseDto> findAppointmentByPetId(Long idPet) {
         PetAnimals pet = petService.findPetById(idPet);
-
-        Appointment appointment = appointamentRepository.findByPet(pet).orElseThrow(() -> new BusinessException("Não Existe Agendamento para esse Pet"));;
-
-
-        return appointamentMapper.toAppointamentRespoDto(appointment);
+        List<Appointment> appointments = appointamentRepository.findByPet(pet);
+        List<AppointamentResponseDto> appointamentResponseDtos = appointments.stream().map(appointment -> appointamentMapper.toAppointamentRespoDto(appointment)).collect(Collectors.toList());
+        return appointamentResponseDtos;
     }
 }
