@@ -35,7 +35,8 @@ public class PasswordResetService {
 
         tokenRepository.save(resetToken);
 
-        String resetLink = "http://localhost:4200/reset-password?token=" + token;
+        String resetLink = "\n" +
+                "https://petconnect-seven.vercel.app/reset-password?token=" + token;
         emailService.sendPasswordResetEmail(user.getEmail(), resetLink);
         return DefaultMessageDto.builder()
                 .message("Token Enviado no meu Cadastrado")
