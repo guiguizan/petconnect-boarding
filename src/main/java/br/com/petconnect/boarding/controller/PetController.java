@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,21 +26,25 @@ public class PetController {
     private final PetService petService;
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public PetResponseDto insertPet(@Valid @RequestBody InsertPetRequestDto insertPetDto){
         return petInsertService.insertPetDto(insertPetDto);
     }
 
     @GetMapping("/my-pets")
+    @ResponseStatus(HttpStatus.OK)
     public List<PetResponseDto> getMyPets()
     {
             return petService.getPetsByUserId();
     }
     @GetMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
     public PetResponseDto getMyPets(@RequestParam Long idPet) {
         return petService.findPetByIdFromUser(idPet);
     }
 
     @PutMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
     public PetResponseDto updatePet(@Valid @RequestBody InsertPetRequestDto insertPetRequestDto,@RequestParam Long idPet){
         return petService.updatePet(insertPetRequestDto,idPet);
     }

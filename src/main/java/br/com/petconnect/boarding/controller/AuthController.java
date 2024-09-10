@@ -23,13 +23,14 @@ public class AuthController {
     private final AuthenticatedUserService authenticatedUserService;
     private final JwtUtil jwtUtil;
     @PostMapping("/signup")
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.CREATED)
     public UserCreatedResponseDto createUser(@Valid @RequestBody InsertUserRequesterDto user){
         return userInsertService.createUser(user);
     }
 
 
     @PostMapping("/login")
+    @ResponseStatus(HttpStatus.OK)
     public UserLoginResponseDto authenticatedUser(@RequestBody AuthenticatedRequestDto authenticatedRequestDto){
         return authenticatedUserService.login(authenticatedRequestDto);
     }
