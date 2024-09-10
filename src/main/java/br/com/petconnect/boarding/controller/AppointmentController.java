@@ -8,6 +8,9 @@ import br.com.petconnect.boarding.service.appointment.AppointmentInsertService;
 import br.com.petconnect.boarding.service.appointment.AppointmentService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,34 +23,46 @@ public class AppointmentController {
     private final AppointmentService appointmentService;
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public AppointamentResponseDto insertAppointament(@RequestBody @Valid InsertAppointmentRequestDto insertAppointmentRequestDto){
         return appointmentInsertService.insertAppointament(insertAppointmentRequestDto);
     }
 
+    @GetMapping
+    @ResponseStatus(HttpStatus.OK)
+    public Page<AppointamentResponseDto> findAllAppointments(Pageable pageable){
+        return appointmentService.findAll(pageable);
+    }
+
     @GetMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
     public AppointamentResponseDto getAppointamentById(@RequestParam Long idAppointament){
         return appointmentService.findByIdAndReturnDto(idAppointament);
     }
 
 
     @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
     public DefaultMessageDto deleteAppointament(@RequestParam Long idAppointament){
         return appointmentService.deleteAppointament(idAppointament);
     }
 
 
     @GetMapping("/pet/{petId}")
+    @ResponseStatus(HttpStatus.OK)
     public List<AppointamentResponseDto> getAppointmentByPetId(@RequestParam Long IdPet){
         return appointmentService.findAppointmentByPetId(IdPet);
     }
 
 
     @GetMapping("/user")
+    @ResponseStatus(HttpStatus.OK)
     public List<AppointamentResponseDto> getAppointmentByUser(){
         return appointmentService.findAppointmentByUser();
     }
 
     @PutMapping
+    @ResponseStatus(HttpStatus.OK)
     public DefaultMessageDto getAppointmentByUser(@RequestBody UpdateAppointmentRequestDto updateAppointmentRequestDto){
         return appointmentService.updateAppointament(updateAppointmentRequestDto);
     }

@@ -13,6 +13,8 @@ import br.com.petconnect.boarding.service.pet.PetService;
 import br.com.petconnect.boarding.service.user.UserService;
 import br.com.petconnect.boarding.util.AuthUtils;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -63,7 +65,9 @@ public class AppointmentService {
     }
 
 
-
+    public Page<AppointamentResponseDto> findAll(Pageable pageable){
+        return appointamentRepository.findAll(pageable).map(appointmentMapper::toAppointamentRespoDto);
+    }
 
 
     public List<AppointamentResponseDto> findAppointmentByPetId(Long idPet) {
