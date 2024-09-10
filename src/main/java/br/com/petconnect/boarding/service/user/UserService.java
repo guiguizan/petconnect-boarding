@@ -139,8 +139,18 @@ public class UserService {
                 .build();
     }
     @Transactional
-    public Page<UserResponseDto> getUsers(String roleName,Pageable pageable) {
-        Page<User> userPage = userRepository.findByRoleName(roleName,pageable);  // Corrigido para passar o pageable
-        return userPage.map( userMapper::toUserResponse);  // Transformando User em UserResponseDto
+    public Page<UserResponseDto> getUsers(String roleName, Pageable pageable) {
+        // Validate input to prevent unnecessary database calls
+        if (roleName == null || roleName.isEmpty()) {
+            throw new IllegalArgumentException("Role name must not be null or empty");
+        }
+
+        // Fetch all users if the specified role name is "ALL"
+        if ("ALL".equalsIgnoreCase(roleName)) {
+            return userRepository.findAll(pageable).map(userMapper::toUserResponse);
+        }
+
+        // Fetch users by specific role name
+        return userRepository.findByRoleName(roleName, pageable).map(userMapper::toUserResponse);
     }
 }
