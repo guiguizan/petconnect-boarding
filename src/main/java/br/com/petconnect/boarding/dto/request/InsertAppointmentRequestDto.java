@@ -3,6 +3,7 @@ package br.com.petconnect.boarding.dto.request;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -14,7 +15,7 @@ import java.time.LocalTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class InsertAppointmentRequestDto {
-    @NotBlank(message = "Id do pet é obrigatorio")
+    @NotNull(message = "Id do pet é obrigatorio")
     private Long petId;
     @NotBlank(message = "serviceType  é obrigatorio")
     private String serviceType;
