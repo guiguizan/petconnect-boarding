@@ -113,6 +113,14 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 .body("Autenticação necessária: " + ex.getMessage());
     }
 
+    @ExceptionHandler(FirebaseUploadException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ResponseEntity<String> handleAuthenticationException(FirebaseUploadException ex) {
+        return ResponseEntity
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body("Erro Ao Fazer Upload: " + ex.getMessage());
+    }
+
 
 
 }

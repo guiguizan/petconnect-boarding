@@ -12,7 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class ProductRequestDto {
+public class InsertProductRequestDto {
     private String name;
     private BigDecimal price;
     private Integer quantity;
@@ -21,5 +21,4 @@ public class ProductRequestDto {
     private String category;
     private List<String> tags;
     private Boolean active;
-
 }

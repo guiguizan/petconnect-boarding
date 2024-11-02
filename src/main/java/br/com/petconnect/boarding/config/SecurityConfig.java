@@ -30,6 +30,8 @@ public class SecurityConfig {
 
     private final JwtRequestFilter jwtRequestFilter;
     private final CustomAuthenticationEntryPointConfig authenticationEntryPoint;
+    private final CustomAccessDeniedHandler customAccessDeniedHandler;
+
 
 
     @Bean
@@ -39,10 +41,11 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+
+        try {
          http
                 .cors(Customizer.withDefaults())
                 .csrf(csrf -> csrf.disable())
-
                 .authorizeHttpRequests(authz -> authz
                          .requestMatchers(HttpMethod.OPTIONS,"/**").permitAll()
                         .requestMatchers("/api/v1/password/update-password").authenticated()
@@ -52,7 +55,8 @@ public class SecurityConfig {
                         "/swagger-resources/**",
                                 "/swagger-ui/**",
                                 "/v3/api-docs/**",
-                                "/webjars/**"
+                                "/webjars/**",
+                                "swagger-ui.html/**"
                         ).permitAll()
                         .anyRequest().authenticated()
                 )
@@ -61,9 +65,17 @@ public class SecurityConfig {
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
                 .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class) // Adiciona o filtro JWT antes do filtro padrão de autenticação
-                .exceptionHandling(exceptionHandling -> exceptionHandling
+                .exceptionHandling(exceptionHandling ->
+
+                        exceptionHandling
+                                .accessDeniedHandler(customAccessDeniedHandler)
                                 .authenticationEntryPoint(authenticationEntryPoint) // Aqui é onde o CustomAuthenticationEntryPointConfig é registrado
         );
         return http.build();
+
+        } catch (Exception e){
+            throw  new RuntimeException("Erro",e);
+        }
+
     }
 }
