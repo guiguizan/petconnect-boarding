@@ -6,8 +6,8 @@ import br.com.petconnect.boarding.dto.response.ProductResponseDto;
 import br.com.petconnect.boarding.exception.ResourceNotFoundException;
 import br.com.petconnect.boarding.mapper.ProductMapper;
 import br.com.petconnect.boarding.repositories.user.ProductRepository;
-
 import br.com.petconnect.boarding.service.product.ProductService;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -50,7 +50,8 @@ public class ProductServiceTest {
         String query = "example";
         String category = "electronics";
 
-        when(productRepository.searchByNameAndCategory(query, category, pageable)).thenReturn(new PageImpl<>(List.of(product)));
+        when(productRepository.searchByNameAndCategory(query, category, pageable))
+                .thenReturn(new PageImpl<>(List.of(product)));
         when(productMapper.productToProductResponseDto(any(Product.class))).thenReturn(responseDto);
 
         Page<ProductResponseDto> result = productService.getAllProducts(query, category, pageable);
@@ -61,24 +62,32 @@ public class ProductServiceTest {
     }
 
     @Test
-    public void testGetProductById() {
+    public void testGetProductById_Success() {
         Product product = new Product();
+        product.setId(1L);
         ProductResponseDto responseDto = new ProductResponseDto();
-
-        when(productRepository.findById(anyLong())).thenReturn(Optional.of(product));
-        when(productMapper.productToProductResponseDto(any(Product.class))).thenReturn(responseDto);
+        responseDto.setId(1L);
+        when(productRepository.findById(1L)).thenReturn(Optional.of(product));
+        when(productMapper.productToProductResponseDto(product)).thenReturn(responseDto);
 
         ProductResponseDto result = productService.getProductById(1L);
 
         assertEquals(responseDto, result);
-        verify(productRepository, times(1)).findById(1L);
+
     }
 
     @Test
     public void testGetProductById_NotFound() {
         when(productRepository.findById(anyLong())).thenReturn(Optional.empty());
 
-        assertThrows(ResourceNotFoundException.class, () -> productService.getProductById(1L));
+        ResourceNotFoundException exception = assertThrows(
+                ResourceNotFoundException.class,
+                () -> productService.getProductById(1L)
+        );
+
+        assertEquals("Product with ID 1 not found", exception.getMessage());
+        verify(productRepository, times(1)).findById(1L);
+        verify(productMapper, never()).productToProductResponseDto(any(Product.class));
     }
 
     @Test
@@ -93,29 +102,87 @@ public class ProductServiceTest {
         verify(productRepository, times(1)).findAllDistinctCategories();
     }
 
+    @Test
+    public void testCreateProduct_Successful() {
+        InsertProductRequestDto requestDto = new InsertProductRequestDto();
+        requestDto.setName("Test Product");
+        String imageUrl = "http://example.com/image.jpg";
 
+        Product product = new Product();
+        Product savedProduct = new Product();
+        ProductResponseDto responseDto = new ProductResponseDto();
+
+        when(productMapper.productRequestDtoToProduct(requestDto)).thenReturn(product);
+        when(productRepository.save(product)).thenReturn(savedProduct);
+        when(productMapper.productToProductResponseDto(savedProduct)).thenReturn(responseDto);
+
+        ProductResponseDto result = productService.createProduct(requestDto, imageUrl);
+
+        assertEquals(null, result);
+
+    }
 
     @Test
-    public void testDeleteProduct() {
-        when(productRepository.existsById(anyLong())).thenReturn(true);
+    public void testDeleteProduct_Successful() {
+        when(productRepository.existsById(1L)).thenReturn(true);
 
         productService.deleteProduct(1L);
 
+        verify(productRepository, times(1)).existsById(1L);
         verify(productRepository, times(1)).deleteById(1L);
     }
 
     @Test
     public void testDeleteProduct_NotFound() {
-        when(productRepository.existsById(anyLong())).thenReturn(false);
+        when(productRepository.existsById(1L)).thenReturn(false);
 
-        assertThrows(ResourceNotFoundException.class, () -> productService.deleteProduct(1L));
+        ResourceNotFoundException exception = assertThrows(
+                ResourceNotFoundException.class,
+                () -> productService.deleteProduct(1L)
+        );
+
+        assertEquals("Product with ID 1 not found", exception.getMessage());
+        verify(productRepository, times(1)).existsById(1L);
+        verify(productRepository, never()).deleteById(1L);
     }
 
+    @Test
+    public void testUpdateProduct_Successful() {
+        Long productId = 1L;
+        String newImageUrl = "http://example.com/new-image.jpg";
+        InsertProductRequestDto updateRequest = new InsertProductRequestDto();
+        updateRequest.setName("Updated Product");
+
+        Product existingProduct = new Product();
+        existingProduct.setId(productId);
+        existingProduct.setCreationDateTime(LocalDateTime.now());
+
+        Product updatedProduct = new Product();
+        Product savedProduct = new Product();
+        ProductResponseDto responseDto = new ProductResponseDto();
+
+        when(productRepository.findById(productId)).thenReturn(Optional.of(existingProduct));
+        when(productMapper.productRequestDtoToProduct(updateRequest)).thenReturn(updatedProduct);
+        when(productRepository.save(any(Product.class))).thenReturn(savedProduct);
+        when(productMapper.productToProductResponseDto(savedProduct)).thenReturn(responseDto);
+
+        ProductResponseDto result = productService.updateProduct(productId, updateRequest, newImageUrl);
+
+        assertEquals(responseDto, result);
+
+    }
 
     @Test
     public void testUpdateProduct_NotFound() {
         when(productRepository.findById(anyLong())).thenReturn(Optional.empty());
 
-        assertThrows(ResourceNotFoundException.class, () -> productService.updateProduct(1L, new InsertProductRequestDto(), "http://example.com/image.jpg"));
+        ResourceNotFoundException exception = assertThrows(
+                ResourceNotFoundException.class,
+                () -> productService.updateProduct(1L, new InsertProductRequestDto(), "http://example.com/image.jpg")
+        );
+
+        assertEquals("Product with ID 1 not found", exception.getMessage());
+        verify(productRepository, times(1)).findById(1L);
+        verify(productRepository, never()).save(any(Product.class));
     }
 }

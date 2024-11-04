@@ -3,7 +3,7 @@ package br.com.petconnect.boarding.controller;
 
 import br.com.petconnect.boarding.dto.request.InsertProductRequestDto;
 import br.com.petconnect.boarding.dto.response.ProductResponseDto;
-import br.com.petconnect.boarding.service.firebase.FirebaseStorageService;
+import br.com.petconnect.boarding.config.FirebaseStorageService;
 import br.com.petconnect.boarding.service.product.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;

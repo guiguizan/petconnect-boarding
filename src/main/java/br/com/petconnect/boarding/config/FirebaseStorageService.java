@@ -1,4 +1,4 @@
-package br.com.petconnect.boarding.service.firebase;
+package br.com.petconnect.boarding.config;
 
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.cloud.storage.Storage;

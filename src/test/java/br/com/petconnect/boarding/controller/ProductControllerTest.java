@@ -2,7 +2,7 @@ package br.com.petconnect.boarding.controller;
 
 import br.com.petconnect.boarding.dto.request.InsertProductRequestDto;
 import br.com.petconnect.boarding.dto.response.ProductResponseDto;
-import br.com.petconnect.boarding.service.firebase.FirebaseStorageService;
+import br.com.petconnect.boarding.config.FirebaseStorageService;
 import br.com.petconnect.boarding.service.product.ProductService;
 
 import org.junit.jupiter.api.BeforeEach;
