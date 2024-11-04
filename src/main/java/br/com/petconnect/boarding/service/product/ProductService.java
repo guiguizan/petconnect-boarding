@@ -76,14 +76,29 @@ public class ProductService {
 
 
     @Transactional
-    public ProductResponseDto updateProduct(Long id, InsertProductRequestDto productRequestDto) {
+    public ProductResponseDto updateProduct(Long id, InsertProductRequestDto productRequestDto, String imageUrl) {
         return productRepository.findById(id).map(existingProduct -> {
+            // Mapeia o DTO de solicitação para a entidade do produto
             Product updatedProduct = productMapper.productRequestDtoToProduct(productRequestDto);
-            updatedProduct.setId(id); // Ensure we update the correct product
-            updatedProduct.setCreationDateTime(existingProduct.getCreationDateTime()); // Preserve original creation date
+
+            // Mantém o ID do produto e a data de criação original
+            updatedProduct.setId(id);
+            updatedProduct.setCreationDateTime(existingProduct.getCreationDateTime());
+
+            // Atualiza a URL da imagem, se uma nova imagem for enviada
+            if (imageUrl != null && !imageUrl.isEmpty()) {
+                updatedProduct.setImages(Arrays.asList(imageUrl)); // Define a nova URL da imagem
+            } else {
+                updatedProduct.setImages(existingProduct.getImages()); // Mantém a URL da imagem original
+            }
+
+            // Define a data/hora da última atualização
             updatedProduct.setLastUpdateTime(LocalDateTime.now());
 
+            // Salva o produto atualizado no repositório
             Product savedProduct = productRepository.save(updatedProduct);
+
+            // Retorna o produto atualizado como DTO de resposta
             return productMapper.productToProductResponseDto(savedProduct);
         }).orElseThrow(() -> new ResourceNotFoundException("Product with ID " + id + " not found"));
     }

@@ -76,9 +76,27 @@ public class ProductController {
         }
     }
 
-    @PutMapping("/{idProduct}")
-    public ProductResponseDto updateProduct(@PathVariable Long idProduct, @RequestBody InsertProductRequestDto productDTO) {
-        return productService.updateProduct(idProduct, productDTO);
+    @Operation(summary = "Update an existing product with image upload",
+            responses = {
+                    @ApiResponse(description = "Product updated successfully", responseCode = "200"),
+                    @ApiResponse(description = "Unsupported Media Type", responseCode = "415")
+            })
+    @PutMapping(value = "/{idProduct}", consumes = "multipart/form-data")
+    @ResponseStatus(HttpStatus.OK)
+    public ProductResponseDto updateProduct(
+            @PathVariable Long idProduct,
+            @Valid @RequestPart("product") InsertProductRequestDto productDto,
+            @RequestPart("image") MultipartFile image
+    ) {
+        try {
+            Map<String, String> uploadResult = firebaseStorageService.uploadFile(image);
+            String imageUrl = uploadResult.get("url");
+
+            ProductResponseDto updatedProduct = productService.updateProduct(idProduct, productDto, imageUrl);
+            return updatedProduct;
+        } catch (IOException e) {
+            throw new RuntimeException("Error uploading image: " + e.getMessage());
+        }
     }
 
 
