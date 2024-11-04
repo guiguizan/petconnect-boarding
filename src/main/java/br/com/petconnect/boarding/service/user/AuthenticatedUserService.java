@@ -42,7 +42,7 @@ public class AuthenticatedUserService {
             return user;
         }
 
-        private List<RoleResponseDto> getUserRoles(User user) {
+        public List<RoleResponseDto> getUserRoles(User user) {
             return Optional.ofNullable(user.getRoles())
                     .orElse(Collections.emptyList())
                     .stream()
@@ -50,7 +50,7 @@ public class AuthenticatedUserService {
                     .collect(Collectors.toList());
         }
 
-        private String generateToken(User user, List<RoleResponseDto> roles) {
+        public String generateToken(User user, List<RoleResponseDto> roles) {
             List<String> roleNames = roles.stream()
                     .map(RoleResponseDto::getName)
                     .collect(Collectors.toList());
@@ -59,7 +59,7 @@ public class AuthenticatedUserService {
             return jwtUtil.generateToken(user.getEmail(), user.getIdUser().toString(), roleNames);
         }
 
-        private UserLoginResponseDto buildUserLoginResponse(User user, List<RoleResponseDto> roles, String token) {
+        public UserLoginResponseDto buildUserLoginResponse(User user, List<RoleResponseDto> roles, String token) {
             return UserLoginResponseDto.builder()
                     .token(token)
                     .email(user.getEmail())

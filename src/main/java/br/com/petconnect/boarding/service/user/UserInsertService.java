@@ -80,7 +80,7 @@ public class UserInsertService {
         return contactUser;
     }
 
-    private UserCreatedResponseDto generateUserResponse(User user) {
+    public UserCreatedResponseDto generateUserResponse(User user) {
         List<String> roleNames = user.getRoles().stream()
                 .map(role -> role.getName())
                 .collect(Collectors.toList());
@@ -89,7 +89,7 @@ public class UserInsertService {
         return new UserCreatedResponseDto(token);
     }
 
-    private void validateContactTypes(List<InsertUserContactsDto> contacts) {
+    public void validateContactTypes(List<InsertUserContactsDto> contacts) {
         contacts.forEach(contact -> {
             if (!ContactTypeEnum.isValidCode(contact.getType())) {
                 throw new BusinessException("Tipo de contato inválido: "+contact.getType()+"");
