@@ -1,6 +1,7 @@
 package br.com.petconnect.boarding.service.appointment;
 
 import br.com.petconnect.boarding.dto.AppointmentSummaryDto;
+import br.com.petconnect.boarding.dto.MonthlyAppointmentsPercentageDto;
 import br.com.petconnect.boarding.dto.response.AppointmentSummaryResponseDto;
 import br.com.petconnect.boarding.repositories.user.AppointamentRepository;
 import lombok.RequiredArgsConstructor;
@@ -36,4 +37,22 @@ public class AppointmentAnalyticsService {
 
         return new AppointmentSummaryResponseDto(summaryList,overallTotalAppointments);
     }
+
+    public List<MonthlyAppointmentsPercentageDto> getAppointmentsCountAndPercentageByMonth() {
+        List<Object[]> results = appointamentRepository.getAppointmentsCountAndPercentageByMonth();
+        List<MonthlyAppointmentsPercentageDto> monthlyAppointments = new ArrayList<>();
+
+        for (Object[] result : results) {
+            String month = (String) result[0];
+            Integer year = (Integer) result[1];
+            String petType = (String) result[2];
+            Long totalAppointments = ((Number) result[3]).longValue();
+            Double percentage = ((Number) result[4]).doubleValue();
+
+            monthlyAppointments.add(new MonthlyAppointmentsPercentageDto(month, year, petType, totalAppointments, percentage));
+        }
+
+        return monthlyAppointments;
+    }
+
 }
