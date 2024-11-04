@@ -13,12 +13,14 @@ import java.util.List;
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {
 
-    @Query("SELECT p FROM Product p WHERE LOWER(p.name) LIKE LOWER(CONCAT('%', :name, '%')) AND LOWER(p.category) = LOWER(:category)")
+    @Query("SELECT p FROM Product p WHERE (LOWER(p.name) LIKE LOWER(CONCAT('%', :name, '%')) OR LOWER(p.description) LIKE LOWER(CONCAT('%', :name, '%'))) AND LOWER(p.category) = LOWER(:category)")
     Page<Product> searchByNameAndCategory(@Param("name") String name, @Param("category") String category, Pageable pageable);
 
-    @Query("SELECT p FROM Product p WHERE LOWER(p.name) LIKE LOWER(CONCAT('%', :name, '%'))")
-    Page<Product> searchByName(@Param("name") String name, Pageable pageable);
+    // Busca apenas por nome ou descrição
+    @Query("SELECT p FROM Product p WHERE LOWER(p.name) LIKE LOWER(CONCAT('%', :name, '%')) OR LOWER(p.description) LIKE LOWER(CONCAT('%', :name, '%'))")
+    Page<Product> searchByNameOrDescription(@Param("name") String name, Pageable pageable);
 
+    // Filtra apenas pela categoria
     @Query("SELECT p FROM Product p WHERE LOWER(p.category) = LOWER(:category)")
     Page<Product> filterByCategory(@Param("category") String category, Pageable pageable);
 
