@@ -25,7 +25,7 @@ public class AnalyticsController {
     }
 
 
-    @GetMapping("/monthly-percentage-summary")
+    @GetMapping("/appointment-monthly-percentage-summary")
     public ResponseEntity<List<MonthlyAppointmentsPercentageDto>> getAppointmentsCountAndPercentageByMonth() {
         List<MonthlyAppointmentsPercentageDto> monthlySummary = appointmentAnalyticsService.getAppointmentsCountAndPercentageByMonth();
         return ResponseEntity.ok(monthlySummary);
