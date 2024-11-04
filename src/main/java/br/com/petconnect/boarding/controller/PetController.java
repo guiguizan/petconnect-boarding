@@ -37,21 +37,21 @@ public class PetController {
     {
             return petService.getPetsByUserId();
     }
-    @GetMapping("/{id}")
+    @GetMapping("/{idPet}")
     @ResponseStatus(HttpStatus.OK)
-    public PetResponseDto getMyPets(@RequestParam Long idPet) {
+    public PetResponseDto getMyPets(@PathVariable Long idPet) {
         return petService.findPetByIdFromUser(idPet);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/{idPet}")
     @ResponseStatus(HttpStatus.OK)
-    public PetResponseDto updatePet(@Valid @RequestBody InsertPetRequestDto insertPetRequestDto,@RequestParam Long idPet){
+    public PetResponseDto updatePet(@Valid @RequestBody InsertPetRequestDto insertPetRequestDto,@PathVariable Long idPet){
         return petService.updatePet(insertPetRequestDto,idPet);
     }
 
 
-    @DeleteMapping("/{id}")
-    public DefaultMessageDto updatePet(@RequestParam Long idPet){
+    @DeleteMapping("/{idPet}")
+    public DefaultMessageDto updatePet(@PathVariable Long idPet){
         return petService.deletePet(idPet);
     }
 }

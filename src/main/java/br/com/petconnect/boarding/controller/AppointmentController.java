@@ -36,24 +36,24 @@ public class AppointmentController {
         return appointmentService.findAll(pageable);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{idAppointament}")
     @ResponseStatus(HttpStatus.OK)
-    public AppointamentResponseDto getAppointamentById(@RequestParam Long idAppointament){
+    public AppointamentResponseDto getAppointamentById(@PathVariable Long idAppointament){
         return appointmentService.findByIdAndReturnDto(idAppointament);
     }
 
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{idAppointament}")
     @ResponseStatus(HttpStatus.OK)
-    public DefaultMessageDto deleteAppointament(@RequestParam Long idAppointament){
+    public DefaultMessageDto deleteAppointament(@PathVariable Long idAppointament){
         return appointmentService.deleteAppointament(idAppointament);
     }
 
 
     @GetMapping("/pet/{petId}")
     @ResponseStatus(HttpStatus.OK)
-    public List<AppointamentResponseDto> getAppointmentByPetId(@RequestParam Long IdPet){
-        return appointmentService.findAppointmentByPetId(IdPet);
+    public List<AppointamentResponseDto> getAppointmentByPetId(@PathVariable Long petId){
+        return appointmentService.findAppointmentByPetId(petId);
     }
 
 
