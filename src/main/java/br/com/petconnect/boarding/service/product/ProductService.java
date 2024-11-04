@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -33,6 +34,10 @@ public class ProductService {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Product with ID " + id + " not found"));
         return productMapper.productToProductResponseDto(product);
+    }
+
+    public List<String> getAllCategories() {
+        return productRepository.findAllDistinctCategories();
     }
 
 

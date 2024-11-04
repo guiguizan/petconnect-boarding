@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -32,6 +33,13 @@ public class ProductController {
         Page<ProductResponseDto> products = productService.getAllProducts(pageable);
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
+
+    @GetMapping("/get-all-category")
+    @ResponseStatus(HttpStatus.OK)
+    public List<String> getAllCategory() {
+        return productService.getAllCategories();
+    }
+
 
 
     @GetMapping("/{idProduct}")
