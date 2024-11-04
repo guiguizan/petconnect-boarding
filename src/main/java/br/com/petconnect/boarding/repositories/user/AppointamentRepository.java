@@ -14,4 +14,7 @@ public interface AppointamentRepository  extends JpaRepository<Appointment,Long>
 
    List<Appointment> findByUser(User user);
 
+   @Query(value = "SELECT * FROM  get_total_appointments_by_user_and_service_type()", nativeQuery = true)
+   List<Object[]> getTotalAppointmentsByUserAndServiceType();
+
 }
