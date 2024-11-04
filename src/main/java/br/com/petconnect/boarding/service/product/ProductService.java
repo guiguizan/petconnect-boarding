@@ -30,7 +30,7 @@ public class ProductService {
             return productRepository.searchByNameAndCategory(query, category, pageable).map(productMapper::productToProductResponseDto);
         } else if (query != null) {
             // Apenas busca
-            return productRepository.searchByName(query, pageable).map(productMapper::productToProductResponseDto);
+            return productRepository.searchByNameOrDescription(query, pageable).map(productMapper::productToProductResponseDto);
         } else if (category != null) {
             // Apenas filtra por categoria
             return productRepository.filterByCategory(category, pageable).map(productMapper::productToProductResponseDto);
