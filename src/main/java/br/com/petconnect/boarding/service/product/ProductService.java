@@ -24,9 +24,20 @@ public class ProductService {
     private final ProductMapper productMapper= ProductMapper.INSTANCE;
 
 
-    public Page<ProductResponseDto> getAllProducts(Pageable pageable) {
-        return productRepository.findAll(pageable)
-                .map(productMapper::productToProductResponseDto);
+    public Page<ProductResponseDto> getAllProducts(String query, String category, Pageable pageable) {
+        if (query != null && category != null) {
+            // Busca e filtra por categoria
+            return productRepository.searchByNameAndCategory(query, category, pageable).map(productMapper::productToProductResponseDto);
+        } else if (query != null) {
+            // Apenas busca
+            return productRepository.searchByName(query, pageable).map(productMapper::productToProductResponseDto);
+        } else if (category != null) {
+            // Apenas filtra por categoria
+            return productRepository.filterByCategory(category, pageable).map(productMapper::productToProductResponseDto);
+        } else {
+            // Retorna todos os produtos sem filtro
+            return productRepository.findAll(pageable).map(productMapper::productToProductResponseDto);
+        }
     }
 
 

@@ -29,10 +29,14 @@ public class ProductController {
     private final FirebaseStorageService firebaseStorageService;
 
     @GetMapping
-    public ResponseEntity<Page<ProductResponseDto>> getAllProducts(Pageable pageable) {
-        Page<ProductResponseDto> products = productService.getAllProducts(pageable);
-        return new ResponseEntity<>(products, HttpStatus.OK);
+    public ResponseEntity<Page<ProductResponseDto>> getAllProducts(
+            @RequestParam(value = "query", required = false) String query,
+            @RequestParam(value = "category", required = false) String category,
+            Pageable pageable) {
+        Page<ProductResponseDto> products = productService.getAllProducts(query, category, pageable);
+        return ResponseEntity.ok(products);
     }
+
 
     @GetMapping("/get-all-category")
     @ResponseStatus(HttpStatus.OK)
