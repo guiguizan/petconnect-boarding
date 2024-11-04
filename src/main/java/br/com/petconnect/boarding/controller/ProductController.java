@@ -7,6 +7,7 @@ import br.com.petconnect.boarding.service.firebase.FirebaseStorageService;
 import br.com.petconnect.boarding.service.product.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -47,7 +48,7 @@ public class ProductController {
     @PostMapping(consumes = "multipart/form-data")
     @ResponseStatus(HttpStatus.OK)
     public ProductResponseDto createProduct(
-            @RequestPart("product") InsertProductRequestDto productDto,
+           @Valid @RequestPart("product") InsertProductRequestDto productDto,
             @RequestPart("image") MultipartFile image
     ) {
 
