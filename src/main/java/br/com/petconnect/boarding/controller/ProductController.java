@@ -81,6 +81,8 @@ public class ProductController {
                     @ApiResponse(description = "Product updated successfully", responseCode = "200"),
                     @ApiResponse(description = "Unsupported Media Type", responseCode = "415")
             })
+
+
     @PutMapping(value = "/{idProduct}", consumes = "multipart/form-data")
     @ResponseStatus(HttpStatus.OK)
     public ProductResponseDto updateProduct(

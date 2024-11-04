@@ -6,8 +6,8 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class MonthlyAppointmentsPercentageDto {
-    private String month;
-    private Integer year;
+
+
     private String petType;
     private Long totalAppointments;
     private Double percentage;

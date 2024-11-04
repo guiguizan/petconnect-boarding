@@ -1,6 +1,7 @@
 package br.com.petconnect.boarding.controller;
 
 import br.com.petconnect.boarding.dto.AppointmentSummaryDto;
+import br.com.petconnect.boarding.dto.MonthlyAppointmentsGroupedDto;
 import br.com.petconnect.boarding.dto.MonthlyAppointmentsPercentageDto;
 import br.com.petconnect.boarding.dto.response.AppointmentSummaryResponseDto;
 import br.com.petconnect.boarding.service.appointment.AppointmentAnalyticsService;
@@ -26,8 +27,8 @@ public class AnalyticsController {
 
 
     @GetMapping("/appointment-monthly-percentage-summary")
-    public ResponseEntity<List<MonthlyAppointmentsPercentageDto>> getAppointmentsCountAndPercentageByMonth() {
-        List<MonthlyAppointmentsPercentageDto> monthlySummary = appointmentAnalyticsService.getAppointmentsCountAndPercentageByMonth();
+    public ResponseEntity<List<MonthlyAppointmentsGroupedDto>> getAppointmentsCountAndPercentageByMonth() {
+        List<MonthlyAppointmentsGroupedDto> monthlySummary = appointmentAnalyticsService.getAppointmentsCountAndPercentageByMonth();
         return ResponseEntity.ok(monthlySummary);
     }
 }

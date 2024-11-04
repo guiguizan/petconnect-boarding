@@ -1,6 +1,7 @@
 package br.com.petconnect.boarding.service.appointment;
 
 import br.com.petconnect.boarding.dto.AppointmentSummaryDto;
+import br.com.petconnect.boarding.dto.MonthlyAppointmentsGroupedDto;
 import br.com.petconnect.boarding.dto.MonthlyAppointmentsPercentageDto;
 import br.com.petconnect.boarding.dto.response.AppointmentSummaryResponseDto;
 import br.com.petconnect.boarding.repositories.user.AppointamentRepository;
@@ -9,6 +10,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -38,21 +41,45 @@ public class AppointmentAnalyticsService {
         return new AppointmentSummaryResponseDto(summaryList,overallTotalAppointments);
     }
 
-    public List<MonthlyAppointmentsPercentageDto> getAppointmentsCountAndPercentageByMonth() {
+    public List<MonthlyAppointmentsGroupedDto> getAppointmentsCountAndPercentageByMonth() {
         List<Object[]> results = appointamentRepository.getAppointmentsCountAndPercentageByMonth();
-        List<MonthlyAppointmentsPercentageDto> monthlyAppointments = new ArrayList<>();
 
-        for (Object[] result : results) {
-            String month = (String) result[0];
-            Integer year = (Integer) result[1];
-            String petType = (String) result[2];
-            Long totalAppointments = ((Number) result[3]).longValue();
-            Double percentage = ((Number) result[4]).doubleValue();
+        // Agrupando os dados por mês e ano
+        Map<String, Map<Integer, List<MonthlyAppointmentsPercentageDto>>> groupedByMonthAndYear =
+                results.stream().collect(Collectors.groupingBy(
+                        result -> (String) result[0],  // Agrupa pelo mês
+                        Collectors.groupingBy(
+                                result -> (Integer) result[1],  // Agrupa pelo ano
+                                Collectors.mapping(result -> {
+                                    String petType = (String) result[2];
+                                    Long totalAppointments = ((Number) result[3]).longValue();
+                                    Double percentage = ((Number) result[4]).doubleValue();
 
-            monthlyAppointments.add(new MonthlyAppointmentsPercentageDto(month, year, petType, totalAppointments, percentage));
+                                    return new MonthlyAppointmentsPercentageDto(petType, totalAppointments, percentage);
+                                }, Collectors.toList())
+                        )
+                ));
+
+        // Criando a lista final agrupada
+        List<MonthlyAppointmentsGroupedDto> groupedData = new ArrayList<>();
+
+        for (Map.Entry<String, Map<Integer, List<MonthlyAppointmentsPercentageDto>>> monthEntry : groupedByMonthAndYear.entrySet()) {
+            String month = monthEntry.getKey();
+
+            for (Map.Entry<Integer, List<MonthlyAppointmentsPercentageDto>> yearEntry : monthEntry.getValue().entrySet()) {
+                Integer year = yearEntry.getKey();
+                List<MonthlyAppointmentsPercentageDto> appointments = yearEntry.getValue();
+
+                // Calculando o total de agendamentos no mês
+                Long totalAppointmentsInMonth = appointments.stream()
+                        .mapToLong(MonthlyAppointmentsPercentageDto::getTotalAppointments)
+                        .sum();
+
+                groupedData.add(new MonthlyAppointmentsGroupedDto(month, year, totalAppointmentsInMonth, appointments));
+            }
         }
 
-        return monthlyAppointments;
+        return groupedData;
     }
 
 }
