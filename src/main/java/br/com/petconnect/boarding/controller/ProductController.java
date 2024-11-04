@@ -33,10 +33,10 @@ public class ProductController {
     }
 
 
-    @GetMapping("/{id}")
+    @GetMapping("/{idProduct}")
     @ResponseStatus(HttpStatus.OK)
-    public ProductResponseDto getProductById(@PathVariable Long id) {
-        return productService.getProductById(id);
+    public ProductResponseDto getProductById(@PathVariable Long idProduct) {
+        return productService.getProductById(idProduct);
     }
 
     @Operation(summary = "Create a new product with image upload",
@@ -63,16 +63,16 @@ public class ProductController {
         }
     }
 
-    @PutMapping("/{id}")
-    public ProductResponseDto updateProduct(@PathVariable Long id, @RequestBody InsertProductRequestDto productDTO) {
-        return productService.updateProduct(id, productDTO);
+    @PutMapping("/{idProduct}")
+    public ProductResponseDto updateProduct(@PathVariable Long idProduct, @RequestBody InsertProductRequestDto productDTO) {
+        return productService.updateProduct(idProduct, productDTO);
     }
 
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{idProduct}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteProduct(@PathVariable Long id) {
-            productService.deleteProduct(id);
+    public void deleteProduct(@PathVariable Long idProduct) {
+            productService.deleteProduct(idProduct);
     }
 
 }
