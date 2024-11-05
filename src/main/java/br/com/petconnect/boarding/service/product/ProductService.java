@@ -72,6 +72,10 @@ public class ProductService {
             throw new ResourceNotFoundException("Product with ID " + id + " not found");
         }
         productRepository.deleteById(id);
+        return DefaultMessageDto
+        .builder()
+        .message("Produto excluido com sucesso!")
+        .build();
     }
 
 
